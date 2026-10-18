@@ -36,6 +36,7 @@ Generation takes a minute or two.
 | `queries/folds.scm`      | Fold regions                                                 |
 | `queries/indents.scm`    | Indentation                                                  |
 | `test/corpus/`           | Expected parse trees                                         |
+| `zed/`                   | Zed extension                                                |
 | `bindings/`              | Generated C, Go, Node, Python, Rust and Swift bindings       |
 
 ## Notes on the grammar
@@ -50,6 +51,21 @@ Generation takes a minute or two.
   expects them, and identifiers everywhere else.
 
 ## Editors
+
+### Zed
+
+`zed/` is a Zed extension built on this grammar, with highlighting, outline, bracket matching,
+indentation and Vim text objects. To try it, open the command palette in Zed, run
+**zed: install dev extension** and pick the `zed/` folder.
+
+`zed/languages/silk/highlights.scm` is generated from `queries/highlights.scm` with Zed's capture
+names (`bun run zed-queries`), so edit the shared query, not the copy. `zed/extension.toml` pins
+the grammar to a commit of this repository; bump `rev` after grammar changes. To list the
+extension in Zed's registry, add this repository to
+[zed-industries/extensions](https://github.com/zed-industries/extensions) as a submodule with
+`path = "zed"`.
+
+### Other editors
 
 Point your editor's tree-sitter configuration at this repository and copy or link `queries/`.
 
