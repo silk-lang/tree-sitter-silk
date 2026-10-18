@@ -49,7 +49,9 @@
     "parse-silk": "sh script/parse-silk.sh",
     "prestart": "tree-sitter build --wasm",
     "start": "tree-sitter playground",
-    "test:node": "node --test bindings/node/*_test.js"
+    "test:node": "node --test bindings/node/*_test.js",
+    "check-zed": "sh script/check-zed.sh",
+    "zed-queries": "node script/zed-queries.js"
   },
   "trustedDependencies": [
     "tree-sitter-cli"
