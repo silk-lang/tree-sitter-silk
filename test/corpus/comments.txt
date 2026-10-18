@@ -1,0 +1,23 @@
+================================================================================
+Comments
+================================================================================
+
+//! Module documentation.
+
+/// Declaration documentation.
+// An ordinary comment.
+fn f() -> () {} // trailing
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (module_doc_comment)
+  (doc_comment)
+  (line_comment)
+  (function_declaration
+    (identifier)
+    (parameter_list)
+    (return_type
+      (unit_type))
+    (block))
+  (line_comment))

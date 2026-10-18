@@ -1,0 +1,353 @@
+================================================================================
+Operators and precedence
+================================================================================
+
+fn f() -> () {
+  let a = -1 + 2 * 3 % 4 / 5 - 6
+  let b = x | y ^ z & w
+  let c = !done || ready && ~mask == 0
+  let d = items |> filter |> count
+  let e = &mut value.field
+  let g = move run make()
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (identifier)
+    (parameter_list)
+    (return_type
+      (unit_type))
+    (block
+      (binding_statement
+        (identifier)
+        (infix_expression
+          (infix_expression
+            (prefix_expression
+              (integer_literal))
+            (infix_expression
+              (infix_expression
+                (infix_expression
+                  (integer_literal)
+                  (integer_literal))
+                (integer_literal))
+              (integer_literal)))
+          (integer_literal)))
+      (binding_statement
+        (identifier)
+        (infix_expression
+          (identifier)
+          (infix_expression
+            (identifier)
+            (infix_expression
+              (identifier)
+              (identifier)))))
+      (binding_statement
+        (identifier)
+        (infix_expression
+          (prefix_expression
+            (identifier))
+          (infix_expression
+            (identifier)
+            (infix_expression
+              (prefix_expression
+                (identifier))
+              (integer_literal)))))
+      (binding_statement
+        (identifier)
+        (pipeline_expression
+          (pipeline_expression
+            (identifier)
+            (identifier))
+          (identifier)))
+      (binding_statement
+        (identifier)
+        (borrow_expression
+          (field_projection_expression
+            (identifier)
+            (field_identifier))))
+      (binding_statement
+        (identifier)
+        (move_expression
+          (run_expression
+            (call_expression
+              (identifier)
+              (argument_list))))))))
+
+================================================================================
+Calls, members and projections
+================================================================================
+
+fn f() -> () {
+  let a = Vector<Element>.make()
+  let b = size<T>(value)
+  let c = pair.0
+  let d = pointer.*
+  let e = holder.drop()
+  let g = ParseState.peek(state, 1)
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (identifier)
+    (parameter_list)
+    (return_type
+      (unit_type))
+    (block
+      (binding_statement
+        (identifier)
+        (call_expression
+          (applied_member_expression
+            (applied_member_selector
+              (applied_type
+                (type_path
+                  (type_identifier))
+                (type_arguments
+                  (type_path
+                    (type_identifier))))
+              (identifier)))
+          (argument_list)))
+      (binding_statement
+        (identifier)
+        (infix_expression
+          (infix_expression
+            (identifier)
+            (identifier))
+          (grouped_expression
+            (identifier))))
+      (binding_statement
+        (identifier)
+        (ordinal_projection_expression
+          (identifier)
+          (integer_literal)))
+      (binding_statement
+        (identifier)
+        (referent_projection_expression
+          (identifier)))
+      (binding_statement
+        (identifier)
+        (call_expression
+          (field_projection_expression
+            (identifier)
+            (field_identifier))
+          (argument_list)))
+      (binding_statement
+        (identifier)
+        (call_expression
+          (field_projection_expression
+            (identifier)
+            (field_identifier))
+          (argument_list
+            (identifier)
+            (integer_literal)))))))
+
+================================================================================
+Literals and records
+================================================================================
+
+fn f() -> () {
+  let a = Point {x: 1, y: 2.5e3}
+  let b = Option<u8>.Some {value: 'x'}
+  let c = .{name: "silk", raw: r"\n", bytes: b"\x00"}
+  let d = [1_000, 0xff, 0b1010, 0o7]
+  let e = (1, 2,)
+  let g = ()
+  let h = 1h30m
+  let i = true
+  let j = """multi
+line"""
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (identifier)
+    (parameter_list)
+    (return_type
+      (unit_type))
+    (block
+      (binding_statement
+        (identifier)
+        (struct_literal_expression
+          (type_path
+            (type_identifier))
+          (field_initializer_list
+            (struct_field_initializer
+              (field_identifier)
+              (integer_literal))
+            (struct_field_initializer
+              (field_identifier)
+              (floating_literal)))))
+      (binding_statement
+        (identifier)
+        (applied_member_expression
+          (applied_member_selector
+            (applied_type
+              (type_path
+                (type_identifier))
+              (type_arguments
+                (type_path
+                  (type_identifier))))
+            (identifier))
+          (field_initializer_list
+            (struct_field_initializer
+              (field_identifier)
+              (character_literal)))))
+      (binding_statement
+        (identifier)
+        (contextual_record_literal_expression
+          (field_initializer_list
+            (struct_field_initializer
+              (field_identifier)
+              (string_literal
+                (string_content)))
+            (struct_field_initializer
+              (field_identifier)
+              (raw_string_literal))
+            (struct_field_initializer
+              (field_identifier)
+              (byte_string_literal
+                (escape_sequence))))))
+      (binding_statement
+        (identifier)
+        (array_literal_expression
+          (integer_literal)
+          (integer_literal)
+          (integer_literal)
+          (integer_literal)))
+      (binding_statement
+        (identifier)
+        (tuple_literal_expression
+          (integer_literal)
+          (integer_literal)))
+      (binding_statement
+        (identifier)
+        (unit_expression))
+      (binding_statement
+        (identifier)
+        (duration_literal))
+      (binding_statement
+        (identifier)
+        (boolean_literal))
+      (binding_statement
+        (identifier)
+        (string_literal)))))
+
+================================================================================
+Anonymous callables, effects and match
+================================================================================
+
+fn f() -> () {
+  let a = fn(x: i32) -> i32 { return x }
+  let b = effect fn() -> () ! Failure { return }
+  let c = effect {
+    return
+  }
+  let d = match place value {
+    Choice.None => { return }
+    -1 => 0
+    Option<T>.Some {value: Inner {..}} if value > 0 => value
+    Token t => 1
+    _ => compileError("unreachable")
+  }
+  let e = unsafe read(p)
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (identifier)
+    (parameter_list)
+    (return_type
+      (unit_type))
+    (block
+      (binding_statement
+        (identifier)
+        (anonymous_callable_expression
+          (parameter_list
+            (parameter
+              (identifier)
+              (type_path
+                (type_identifier))))
+          (return_type
+            (type_path
+              (type_identifier)))
+          (block
+            (return_statement
+              (identifier)))))
+      (binding_statement
+        (identifier)
+        (anonymous_callable_expression
+          (parameter_list)
+          (return_type
+            (unit_type))
+          (failure_row
+            (type_path
+              (type_identifier)))
+          (block
+            (return_statement))))
+      (binding_statement
+        (identifier)
+        (effect_expression
+          (block
+            (return_statement))))
+      (binding_statement
+        (identifier)
+        (match_expression
+          (match_access)
+          (identifier)
+          (match_block
+            (match_arm
+              (enum_member_pattern
+                (type_identifier)
+                (identifier))
+              (block
+                (return_statement)))
+            (match_arm
+              (integer_pattern)
+              (integer_literal))
+            (match_arm
+              (union_variant_pattern
+                (applied_member_selector
+                  (applied_type
+                    (type_path
+                      (type_identifier))
+                    (type_arguments
+                      (type_path
+                        (type_identifier))))
+                  (identifier))
+                (field_pattern_list
+                  (pattern_field
+                    (field_identifier)
+                    (nominal_pattern
+                      (type_path
+                        (type_identifier))
+                      (field_pattern_list
+                        (rest_pattern))))))
+              (infix_expression
+                (identifier)
+                (integer_literal))
+              (identifier))
+            (match_arm
+              (binding_pattern
+                (type_path
+                  (type_identifier))
+                (identifier))
+              (integer_literal))
+            (match_arm
+              (universal_pattern)
+              (compile_error_expression
+                (string_literal
+                  (string_content)))))))
+      (binding_statement
+        (identifier)
+        (unsafe_expression
+          (call_expression
+            (identifier)
+            (argument_list
+              (identifier))))))))

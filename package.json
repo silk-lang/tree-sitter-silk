@@ -1,0 +1,58 @@
+{
+  "name": "tree-sitter-silk",
+  "version": "0.1.0",
+  "description": "Silk grammar for tree-sitter",
+  "repository": "https://github.com/silk-lang/tree-sitter-silk",
+  "license": "MIT",
+  "author": {
+    "name": "Julia Ortiz"
+  },
+  "main": "bindings/node",
+  "types": "bindings/node",
+  "keywords": [
+    "incremental",
+    "parsing",
+    "tree-sitter",
+    "silk"
+  ],
+  "files": [
+    "grammar.js",
+    "tree-sitter.json",
+    "binding.gyp",
+    "prebuilds/**",
+    "bindings/node/*",
+    "queries/*",
+    "src/**",
+    "*.wasm"
+  ],
+  "dependencies": {
+    "node-addon-api": "^8.5.0",
+    "node-gyp-build": "^4.8.4"
+  },
+  "devDependencies": {
+    "prebuildify": "^6.0.1",
+    "tree-sitter": "^0.22.4",
+    "tree-sitter-cli": "^0.25.10"
+  },
+  "peerDependencies": {
+    "tree-sitter": "^0.22.4"
+  },
+  "peerDependenciesMeta": {
+    "tree-sitter": {
+      "optional": true
+    }
+  },
+  "scripts": {
+    "install": "node-gyp-build",
+    "generate": "tree-sitter generate",
+    "test": "tree-sitter test",
+    "parse-silk": "sh script/parse-silk.sh",
+    "prestart": "tree-sitter build --wasm",
+    "start": "tree-sitter playground",
+    "test:node": "node --test bindings/node/*_test.js"
+  },
+  "trustedDependencies": [
+    "tree-sitter-cli"
+  ],
+  "packageManager": "bun@1.4.2"
+}

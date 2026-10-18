@@ -1,0 +1,375 @@
+================================================================================
+Imports
+================================================================================
+
+import silk.vector
+import lexer.Token {Token, TokenKind as Kind,}
+pub import parser.Node as Nodes {NodeKind}
+import mod.type {Thing}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (import_declaration
+    (import_path
+      (identifier)
+      (identifier)))
+  (import_declaration
+    (import_path
+      (identifier)
+      (identifier))
+    (import_member_list
+      (import_member
+        (identifier))
+      (import_member
+        (identifier)
+        (import_alias
+          (identifier)))))
+  (import_declaration
+    (visibility)
+    (import_path
+      (identifier)
+      (identifier))
+    (import_alias
+      (identifier))
+    (import_member_list
+      (import_member
+        (identifier))))
+  (import_declaration
+    (import_path
+      (identifier)
+      (identifier))
+    (import_member_list
+      (import_member
+        (identifier)))))
+
+================================================================================
+Structs and tuples
+================================================================================
+
+pub struct Point<T: Copy> {
+  pub x: T
+  y: T
+}
+extern "c" struct Handle {}
+tuple Pair<A, B>(A, B)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (struct_declaration
+    (visibility)
+    (type_identifier)
+    (type_parameter_list
+      (type_parameter
+        (type_identifier)
+        (type_path
+          (type_identifier))))
+    (struct_field_list
+      (struct_field
+        (visibility)
+        (field_identifier)
+        (type_path
+          (type_identifier)))
+      (struct_field
+        (field_identifier)
+        (type_path
+          (type_identifier)))))
+  (struct_declaration
+    (string_literal
+      (string_content))
+    (type_identifier)
+    (struct_field_list))
+  (tuple_declaration
+    (type_identifier)
+    (type_parameter_list
+      (type_parameter
+        (type_identifier))
+      (type_parameter
+        (type_identifier)))
+    (type_path
+      (type_identifier))
+    (type_path
+      (type_identifier))))
+
+================================================================================
+Enums and unions
+================================================================================
+
+enum (u8) Color {
+  Red = 1,
+  Green = -2,
+  Blue,
+}
+pub union Option<T> {
+  None,
+  Some {pub value: T},
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (enum_declaration
+    (type_path
+      (type_identifier))
+    (type_identifier)
+    (enum_member
+      (identifier)
+      (integer_literal))
+    (enum_member
+      (identifier)
+      (integer_literal))
+    (enum_member
+      (identifier)))
+  (union_declaration
+    (visibility)
+    (type_identifier)
+    (type_parameter_list
+      (type_parameter
+        (type_identifier)))
+    (union_variant
+      (identifier))
+    (union_variant
+      (identifier)
+      (union_variant_field
+        (visibility)
+        (field_identifier)
+        (type_path
+          (type_identifier))))))
+
+================================================================================
+Aliases, roles, constants and parameters
+================================================================================
+
+type Bytes = &[u8]
+role Clock
+pub const LIMIT: usize = 64
+param depth: u32 = 8 where depth < 100
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (type_alias_declaration
+    (type_identifier)
+    (slice_type
+      (type_path
+        (type_identifier))))
+  (role_declaration
+    (type_identifier))
+  (constant_declaration
+    (visibility)
+    (identifier)
+    (type_path
+      (type_identifier))
+    (integer_literal))
+  (package_parameter_declaration
+    (identifier)
+    (type_path
+      (type_identifier))
+    (integer_literal)
+    (package_parameter_validation
+      (infix_expression
+        (identifier)
+        (integer_literal)))))
+
+================================================================================
+Services, interfaces and impls
+================================================================================
+
+service Log {
+  effect fn write(text: string) -> ()
+}
+interface Hash<T> {
+  fn hash(value: &T) -> u64
+}
+impl<T> Hash<T> for Box<T> where T in Hashable {
+  hash: boxHash
+  pub fn drop(self: &mut Box<T>) -> () {}
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (service_declaration
+    (type_identifier)
+    (declaration_list
+      (function_declaration
+        (identifier)
+        (parameter_list
+          (parameter
+            (identifier)
+            (type_path
+              (type_identifier))))
+        (return_type
+          (unit_type)))))
+  (interface_declaration
+    (type_identifier)
+    (type_parameter_list
+      (type_parameter
+        (type_identifier)))
+    (declaration_list
+      (function_declaration
+        (identifier)
+        (parameter_list
+          (parameter
+            (identifier)
+            (reference_type
+              (type_path
+                (type_identifier)))))
+        (return_type
+          (type_path
+            (type_identifier))))))
+  (impl_declaration
+    (type_parameter_list
+      (type_parameter
+        (type_identifier)))
+    (applied_type
+      (type_path
+        (type_identifier))
+      (type_arguments
+        (type_path
+          (type_identifier))))
+    (applied_type
+      (type_path
+        (type_identifier))
+      (type_arguments
+        (type_path
+          (type_identifier))))
+    (where_clause
+      (membership_constraint
+        (type_path
+          (type_identifier))
+        (type_path
+          (type_identifier))))
+    (impl_body
+      (impl_operation
+        (identifier)
+        (type_path
+          (type_identifier)))
+      (function_declaration
+        (visibility)
+        (identifier)
+        (parameter_list
+          (parameter
+            (identifier)
+            (reference_type
+              (applied_type
+                (type_path
+                  (type_identifier))
+                (type_arguments
+                  (type_path
+                    (type_identifier)))))))
+        (return_type
+          (unit_type))
+        (block)))))
+
+================================================================================
+Foreign declarations
+================================================================================
+
+unsafe extern "c" static errno: i32 as "errno"
+export "c" static version: u32 = 1
+pub unsafe extern "c" fn write(fd: i32, data: *const u8, ...) -> isize as "write"
+export "c" fn entry() -> i32 {
+  return 0
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (foreign_static_declaration
+    (string_literal
+      (string_content))
+    (identifier)
+    (type_path
+      (type_identifier))
+    (symbol_name
+      (string_literal
+        (string_content))))
+  (export_static_declaration
+    (string_literal
+      (string_content))
+    (identifier)
+    (type_path
+      (type_identifier))
+    (integer_literal))
+  (function_declaration
+    (visibility)
+    (foreign_marker
+      (string_literal
+        (string_content)))
+    (identifier)
+    (parameter_list
+      (parameter
+        (identifier)
+        (type_path
+          (type_identifier)))
+      (parameter
+        (identifier)
+        (pointer_type
+          (type_path
+            (type_identifier))))
+      (variadic_marker))
+    (return_type
+      (type_path
+        (type_identifier)))
+    (symbol_name
+      (string_literal
+        (string_content))))
+  (function_declaration
+    (foreign_marker
+      (string_literal
+        (string_content)))
+    (identifier)
+    (parameter_list)
+    (return_type
+      (type_path
+        (type_identifier)))
+    (block
+      (return_statement
+        (integer_literal)))))
+
+================================================================================
+Static conditionals and module properties
+================================================================================
+
+static if target.os == "linux" {
+  fn platform() -> string { return "linux" }
+} else static if wasm {
+} else {
+}
+module with module.property(name: "v")
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (static_conditional_declaration
+    (infix_expression
+      (field_projection_expression
+        (identifier)
+        (field_identifier))
+      (string_literal
+        (string_content)))
+    (declaration_group
+      (function_declaration
+        (identifier)
+        (parameter_list)
+        (return_type
+          (type_path
+            (type_identifier)))
+        (block
+          (return_statement
+            (string_literal
+              (string_content))))))
+    (static_conditional_declaration
+      (identifier)
+      (declaration_group)
+      (declaration_group)))
+  (module_property_declaration
+    (function_property_clause
+      (identifier)
+      (identifier)
+      (function_property
+        (identifier)
+        (string_literal
+          (string_content))))))

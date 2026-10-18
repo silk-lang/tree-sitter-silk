@@ -1,0 +1,231 @@
+================================================================================
+Function contracts
+================================================================================
+
+pub effect fn parse<'a, T: Copy + 'a, ?Rows>(state: &'a mut State, static count: usize) -> NodeId
+! OutOfMemoryError
+? &mut Allocator at Heap | Clock
+where T provides Hash from Box<T> {
+  return run inner(&mut state.*)
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (visibility)
+    (identifier)
+    (type_parameter_list
+      (lifetime_parameter
+        (lifetime))
+      (type_parameter
+        (type_identifier)
+        (type_path
+          (type_identifier))
+        (lifetime))
+      (row_parameter
+        (type_identifier)))
+    (parameter_list
+      (parameter
+        (identifier)
+        (reference_type
+          (lifetime)
+          (type_path
+            (type_identifier))))
+      (parameter
+        (identifier)
+        (type_path
+          (type_identifier))))
+    (return_type
+      (type_path
+        (type_identifier)))
+    (failure_row
+      (type_path
+        (type_identifier)))
+    (requirement_row
+      (requirement
+        (reference_type
+          (type_path
+            (type_identifier)))
+        (type_path
+          (type_identifier)))
+      (type_path
+        (type_identifier)))
+    (where_clause
+      (provider_constraint
+        (type_path
+          (type_identifier))
+        (type_path
+          (type_identifier))
+        (applied_type
+          (type_path
+            (type_identifier))
+          (type_arguments
+            (type_path
+              (type_identifier))))))
+    (block
+      (return_statement
+        (run_expression
+          (call_expression
+            (identifier)
+            (argument_list
+              (borrow_expression
+                (referent_projection_expression
+                  (identifier))))))))))
+
+================================================================================
+Test functions and properties
+================================================================================
+
+test fn addsNumbers() -> () with test.timeout(limit: 5s) {
+  return
+}
+fn identity(value: i32) -> some<T: Copy> T {
+  return value
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (test_marker)
+    (identifier)
+    (parameter_list)
+    (return_type
+      (unit_type))
+    (function_property_clause
+      (identifier)
+      (identifier)
+      (function_property
+        (identifier)
+        (duration_literal)))
+    (block
+      (return_statement)))
+  (function_declaration
+    (identifier)
+    (parameter_list
+      (parameter
+        (identifier)
+        (type_path
+          (type_identifier))))
+    (return_type
+      (opaque_result_type
+        (type_parameter_list
+          (type_parameter
+            (type_identifier)
+            (type_path
+              (type_identifier))))
+        (type_path
+          (type_identifier))))
+    (block
+      (return_statement
+        (identifier)))))
+
+================================================================================
+Callable and pointer types
+================================================================================
+
+fn apply(f: for<'a> fn(&'a u8) -> bool, g: mut fn<'e>(u8) -> (), p: ?*mut u8, q: [*]const align(8) u8, r: extern "c" unsafe fn(i32) -> i32) -> [u8; 4] {
+  return f
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (identifier)
+    (parameter_list
+      (parameter
+        (identifier)
+        (callable_type
+          (type_parameter_list
+            (lifetime_parameter
+              (lifetime)))
+          (reference_type
+            (lifetime)
+            (type_path
+              (type_identifier)))
+          (type_path
+            (type_identifier))))
+      (parameter
+        (identifier)
+        (callable_type
+          (callable_mode)
+          (callable_environment
+            (lifetime))
+          (type_path
+            (type_identifier))
+          (unit_type)))
+      (parameter
+        (identifier)
+        (pointer_type
+          (type_path
+            (type_identifier))))
+      (parameter
+        (identifier)
+        (pointer_type
+          (pointer_qualifier)
+          (type_path
+            (type_identifier))))
+      (parameter
+        (identifier)
+        (foreign_function_type
+          (string_literal
+            (string_content))
+          (type_path
+            (type_identifier))
+          (type_path
+            (type_identifier)))))
+    (return_type
+      (fixed_array_type
+        (type_path
+          (type_identifier))
+        (integer_literal)))
+    (block
+      (return_statement
+        (identifier)))))
+
+================================================================================
+Generic rows and Without
+================================================================================
+
+fn run<?R>(body: Effect<'e & 'f; T ! Failure ? R>) -> Without<R, &Clock> {
+  return body
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (identifier)
+    (type_parameter_list
+      (row_parameter
+        (type_identifier)))
+    (parameter_list
+      (parameter
+        (identifier)
+        (applied_type
+          (type_path
+            (type_identifier))
+          (type_arguments
+            (effect_environment
+              (lifetime)
+              (lifetime))
+            (type_path
+              (type_identifier))
+            (failure_row
+              (type_path
+                (type_identifier)))
+            (requirement_row
+              (type_path
+                (type_identifier)))))))
+    (return_type
+      (row_without
+        (type_path
+          (type_identifier))
+        (reference_type
+          (type_path
+            (type_identifier)))))
+    (block
+      (return_statement
+        (identifier)))))

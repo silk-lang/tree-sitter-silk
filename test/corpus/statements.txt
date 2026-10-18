@@ -1,0 +1,183 @@
+================================================================================
+Bindings and assignments
+================================================================================
+
+fn f() -> () {
+  let a = 1
+  let mut b: u8 = 2
+  let static c = 3
+  let Point {x, y: py} = point
+  let _ = discard()
+  a = b + c
+  values[0] = 1
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (identifier)
+    (parameter_list)
+    (return_type
+      (unit_type))
+    (block
+      (binding_statement
+        (identifier)
+        (integer_literal))
+      (binding_statement
+        (identifier)
+        (type_path
+          (type_identifier))
+        (integer_literal))
+      (binding_statement
+        (identifier)
+        (integer_literal))
+      (pattern_binding_statement
+        (nominal_pattern
+          (type_path
+            (type_identifier))
+          (field_pattern_list
+            (pattern_field
+              (field_identifier))
+            (pattern_field
+              (field_identifier)
+              (identifier))))
+        (identifier))
+      (pattern_binding_statement
+        (universal_pattern)
+        (call_expression
+          (identifier)
+          (argument_list)))
+      (assignment_statement
+        (identifier)
+        (infix_expression
+          (identifier)
+          (identifier)))
+      (assignment_statement
+        (index_projection_expression
+          (identifier)
+          (integer_literal))
+        (integer_literal)))))
+
+================================================================================
+Conditionals and loops
+================================================================================
+
+fn f() -> () {
+  if a < b && c > d {
+    return
+  } else if let Option<T>.Some {value} = maybe {
+    fail move value
+  } else {
+    drop value
+  }
+  static if wide {} else {}
+  static for field in fields {}
+  while index < count {
+    index = index + 1
+    break
+    continue
+  }
+  unsafe {
+    poke()
+  }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (identifier)
+    (parameter_list)
+    (return_type
+      (unit_type))
+    (block
+      (conditional_statement
+        (infix_expression
+          (infix_expression
+            (identifier)
+            (identifier))
+          (infix_expression
+            (identifier)
+            (identifier)))
+        (block
+          (return_statement))
+        (pattern_conditional_statement
+          (union_variant_pattern
+            (applied_member_selector
+              (applied_type
+                (type_path
+                  (type_identifier))
+                (type_arguments
+                  (type_path
+                    (type_identifier))))
+              (identifier))
+            (field_pattern_list
+              (pattern_field
+                (field_identifier))))
+          (identifier)
+          (block
+            (fail_statement
+              (move_expression
+                (identifier))))
+          (block
+            (drop_statement
+              (identifier)))))
+      (static_conditional_statement
+        (identifier)
+        (block)
+        (block))
+      (static_for_statement
+        (identifier)
+        (identifier)
+        (block))
+      (while_statement
+        (infix_expression
+          (identifier)
+          (identifier))
+        (block
+          (assignment_statement
+            (identifier)
+            (infix_expression
+              (identifier)
+              (integer_literal)))
+          (break_statement)
+          (continue_statement)))
+      (unsafe_statement
+        (block
+          (expression_statement
+            (call_expression
+              (identifier)
+              (argument_list))))))))
+
+================================================================================
+Index projections stop at line breaks
+================================================================================
+
+fn f() -> () {
+  let a = b
+  [1, 2]
+  let c = d[0]
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (identifier)
+    (parameter_list)
+    (return_type
+      (unit_type))
+    (block
+      (binding_statement
+        (identifier)
+        (identifier))
+      (expression_statement
+        (array_literal_expression
+          (integer_literal)
+          (integer_literal)))
+      (binding_statement
+        (identifier)
+        (index_projection_expression
+          (identifier)
+          (integer_literal))))))
