@@ -773,11 +773,54 @@
           "value": "{"
         },
         {
-          "type": "REPEAT",
-          "content": {
-            "type": "SYMBOL",
-            "name": "struct_field"
-          }
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "SEQ",
+                  "members": [
+                    {
+                      "type": "SYMBOL",
+                      "name": "struct_field"
+                    },
+                    {
+                      "type": "REPEAT",
+                      "content": {
+                        "type": "SEQ",
+                        "members": [
+                          {
+                            "type": "STRING",
+                            "value": ","
+                          },
+                          {
+                            "type": "SYMBOL",
+                            "name": "struct_field"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "CHOICE",
+                  "members": [
+                    {
+                      "type": "STRING",
+                      "value": ","
+                    },
+                    {
+                      "type": "BLANK"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
         },
         {
           "type": "STRING",
@@ -3100,6 +3143,10 @@
                         {
                           "type": "SYMBOL",
                           "name": "requirement_selector"
+                        },
+                        {
+                          "type": "SYMBOL",
+                          "name": "integer_literal"
                         }
                       ]
                     },
@@ -3126,6 +3173,10 @@
                               {
                                 "type": "SYMBOL",
                                 "name": "requirement_selector"
+                              },
+                              {
+                                "type": "SYMBOL",
+                                "name": "integer_literal"
                               }
                             ]
                           }
@@ -4251,6 +4302,10 @@
         },
         {
           "type": "SYMBOL",
+          "name": "pattern_while_statement"
+        },
+        {
+          "type": "SYMBOL",
           "name": "break_statement"
         },
         {
@@ -4627,6 +4682,47 @@
         }
       ]
     },
+    "pattern_while_statement": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "while"
+        },
+        {
+          "type": "STRING",
+          "value": "let"
+        },
+        {
+          "type": "FIELD",
+          "name": "pattern",
+          "content": {
+            "type": "SYMBOL",
+            "name": "_pattern"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": "="
+        },
+        {
+          "type": "FIELD",
+          "name": "value",
+          "content": {
+            "type": "SYMBOL",
+            "name": "_expression"
+          }
+        },
+        {
+          "type": "FIELD",
+          "name": "body",
+          "content": {
+            "type": "SYMBOL",
+            "name": "block"
+          }
+        }
+      ]
+    },
     "break_statement": {
       "type": "STRING",
       "value": "break"
@@ -4794,6 +4890,10 @@
         {
           "type": "SYMBOL",
           "name": "array_literal_expression"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "array_repeat_expression"
         },
         {
           "type": "SYMBOL",
@@ -5030,6 +5130,39 @@
               "type": "BLANK"
             }
           ]
+        },
+        {
+          "type": "STRING",
+          "value": "]"
+        }
+      ]
+    },
+    "array_repeat_expression": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "["
+        },
+        {
+          "type": "FIELD",
+          "name": "value",
+          "content": {
+            "type": "SYMBOL",
+            "name": "_expression"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": ";"
+        },
+        {
+          "type": "FIELD",
+          "name": "count",
+          "content": {
+            "type": "SYMBOL",
+            "name": "_expression"
+          }
         },
         {
           "type": "STRING",
@@ -7075,6 +7208,10 @@
     [
       "_expression",
       "type_path"
+    ],
+    [
+      "_expression",
+      "type_arguments"
     ],
     [
       "unit_type",

@@ -90,6 +90,10 @@
         "named": true
       },
       {
+        "type": "array_repeat_expression",
+        "named": true
+      },
+      {
         "type": "boolean_literal",
         "named": true
       },
@@ -279,6 +283,10 @@
       },
       {
         "type": "pattern_conditional_statement",
+        "named": true
+      },
+      {
+        "type": "pattern_while_statement",
         "named": true
       },
       {
@@ -527,6 +535,32 @@
           "named": true
         }
       ]
+    }
+  },
+  {
+    "type": "array_repeat_expression",
+    "named": true,
+    "fields": {
+      "count": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "_expression",
+            "named": true
+          }
+        ]
+      },
+      "value": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "_expression",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -2596,6 +2630,42 @@
     }
   },
   {
+    "type": "pattern_while_statement",
+    "named": true,
+    "fields": {
+      "body": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "block",
+            "named": true
+          }
+        ]
+      },
+      "pattern": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "_pattern",
+            "named": true
+          }
+        ]
+      },
+      "value": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "_expression",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
     "type": "pipeline_expression",
     "named": true,
     "fields": {
@@ -3678,6 +3748,10 @@
         },
         {
           "type": "failure_row",
+          "named": true
+        },
+        {
+          "type": "integer_literal",
           "named": true
         },
         {

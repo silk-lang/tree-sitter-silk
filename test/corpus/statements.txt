@@ -181,3 +181,85 @@ fn f() -> () {
         (index_projection_expression
           (identifier)
           (integer_literal))))))
+
+================================================================================
+Lane counts, repeat arrays and while let
+================================================================================
+
+fn lanes(table: simd<u8, 16>, flags: mask<4>) -> [u8; 4] {
+  let mut words: [u32; 8] = [0; 8]
+  while let Option<u8>.Some {value: byte} = next(&mut words) {
+    run use(byte)
+  }
+  return [[1; 2]; 2]
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (identifier)
+    (parameter_list
+      (parameter
+        (identifier)
+        (applied_type
+          (type_path
+            (type_identifier))
+          (type_arguments
+            (type_path
+              (type_identifier))
+            (integer_literal))))
+      (parameter
+        (identifier)
+        (applied_type
+          (type_path
+            (type_identifier))
+          (type_arguments
+            (integer_literal)))))
+    (return_type
+      (fixed_array_type
+        (type_path
+          (type_identifier))
+        (integer_literal)))
+    (block
+      (binding_statement
+        (identifier)
+        (fixed_array_type
+          (type_path
+            (type_identifier))
+          (integer_literal))
+        (array_repeat_expression
+          (integer_literal)
+          (integer_literal)))
+      (pattern_while_statement
+        (union_variant_pattern
+          (applied_member_selector
+            (applied_type
+              (type_path
+                (type_identifier))
+              (type_arguments
+                (type_path
+                  (type_identifier))))
+            (identifier))
+          (field_pattern_list
+            (pattern_field
+              (field_identifier)
+              (identifier))))
+        (call_expression
+          (identifier)
+          (argument_list
+            (borrow_expression
+              (identifier))))
+        (block
+          (expression_statement
+            (run_expression
+              (call_expression
+                (identifier)
+                (argument_list
+                  (identifier)))))))
+      (return_statement
+        (array_repeat_expression
+          (array_repeat_expression
+            (integer_literal)
+            (integer_literal))
+          (integer_literal))))))
