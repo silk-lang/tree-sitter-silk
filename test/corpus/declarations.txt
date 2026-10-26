@@ -48,8 +48,8 @@ Structs and tuples
 ================================================================================
 
 pub struct Point<T: Copy> {
-  pub x: T
-  y: T
+  pub x: T,
+  y: T,
 }
 extern "c" struct Handle {}
 tuple Pair<A, B>(A, B)

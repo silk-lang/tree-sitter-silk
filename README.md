@@ -36,7 +36,7 @@ Generation takes a minute or two.
 | `queries/folds.scm`      | Fold regions                                                 |
 | `queries/indents.scm`    | Indentation                                                  |
 | `test/corpus/`           | Expected parse trees                                         |
-| `zed/`                   | Zed extension                                                |
+| `zed/`                   | Zed extension, including the `silk lsp` launcher             |
 | `bindings/`              | Generated C, Go, Node, Python, Rust and Swift bindings       |
 
 ## Notes on the grammar
@@ -55,8 +55,16 @@ Generation takes a minute or two.
 ### Zed
 
 `zed/` is a Zed extension built on this grammar, with highlighting, outline, bracket matching,
-indentation and Vim text objects. To try it, open the command palette in Zed, run
-**zed: install dev extension** and pick the `zed/` folder.
+indentation and Vim text objects. It also starts the Silk language server, `silk lsp`, from the
+`silk` tool on PATH, which serves with the Silk version each folder pins. To use another binary,
+set it in Zed's settings:
+
+```json
+{ "lsp": { "silk": { "binary": { "path": "/path/to/silk", "arguments": ["lsp"] } } } }
+```
+
+To try it, install Rust with rustup (Zed builds the extension to WebAssembly), open the command
+palette in Zed, run **zed: install dev extension** and pick the `zed/` folder.
 
 `zed/languages/silk/highlights.scm` is generated from `queries/highlights.scm` with Zed's capture
 names (`bun run zed-queries`), so edit the shared query, not the copy. `zed/extension.toml` pins

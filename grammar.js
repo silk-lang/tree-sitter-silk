@@ -67,6 +67,8 @@ module.exports = grammar({
   conflicts: $ => [
     // `a < b` against a generic suffix `f<T>(x)`, `Option<T>.Some`, or `Box<T> {..}`.
     [$._expression, $.type_path],
+    // A lane count `simd<u8, 16>` against `a < 16`.
+    [$._expression, $.type_arguments],
     // Inside `a < ...`, the right side may also be the start of a generic suffix's type.
     [$.unit_type, $.unit_expression],
     [$.callable_type, $.parameter_list],
@@ -167,8 +169,8 @@ module.exports = grammar({
       field('body', $.struct_field_list),
     ),
 
-    // Declaration fields are whitespace-separated, not comma-separated.
-    struct_field_list: $ => seq('{', repeat($.struct_field), '}'),
+    // Fields are separated by commas, with an optional trailing one, as in the native parser.
+    struct_field_list: $ => seq('{', commaSep($.struct_field), '}'),
 
     struct_field: $ => seq(
       optional($.visibility),
@@ -415,7 +417,8 @@ module.exports = grammar({
     type_arguments: $ => seq(
       '<',
       optional($._effect_environment_prefix),
-      commaSep(choice($._type, $.lifetime, $.requirement_selector)),
+      // An integer argument is a lane count, as in `simd<u8, 16>` and `mask<16>`.
+      commaSep(choice($._type, $.lifetime, $.requirement_selector, $.integer_literal)),
       optional($.failure_row),
       optional($.requirement_row),
       '>',
@@ -540,6 +543,7 @@ module.exports = grammar({
       $.static_conditional_statement,
       $.static_for_statement,
       $.while_statement,
+      $.pattern_while_statement,
       $.break_statement,
       $.continue_statement,
       $.return_statement,
@@ -602,6 +606,15 @@ module.exports = grammar({
 
     while_statement: $ => seq('while', field('condition', $._expression), field('body', $.block)),
 
+    pattern_while_statement: $ => seq(
+      'while',
+      'let',
+      field('pattern', $._pattern),
+      '=',
+      field('value', $._expression),
+      field('body', $.block),
+    ),
+
     break_statement: _ => 'break',
 
     continue_statement: _ => 'continue',
@@ -635,6 +648,7 @@ module.exports = grammar({
       $.grouped_expression,
       $.tuple_literal_expression,
       $.array_literal_expression,
+      $.array_repeat_expression,
       $.struct_literal_expression,
       $.contextual_record_literal_expression,
       $.applied_member_expression,
@@ -663,6 +677,8 @@ module.exports = grammar({
     tuple_literal_expression: $ => seq('(', $._expression, ',', commaSep($._expression), ')'),
 
     array_literal_expression: $ => seq('[', commaSep($._expression), ']'),
+
+    array_repeat_expression: $ => seq('[', field('value', $._expression), ';', field('count', $._expression), ']'),
 
     struct_literal_expression: $ => seq(
       field('type', choice($.type_path, $.applied_type)),
