@@ -34,3 +34,8 @@ jobs:
         run: bun run parse-silk silk
       - name: Zed extension
         run: bun run check-zed
+      - name: Zed extension builds
+        working-directory: zed
+        run: |
+          rustup target add wasm32-wasip2
+          cargo build --release --target wasm32-wasip2
