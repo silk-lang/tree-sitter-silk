@@ -67,12 +67,15 @@
 (import_member
   name: (identifier) @type)
 
-(function_property_clause
-  namespace: (identifier) @type
-  operation: (identifier) @function)
+(directive
+  "@" @attribute
+  name: (identifier) @attribute)
 
-(function_property
+(directive_argument
   name: (identifier) @property)
+
+(reference_type
+  role: (identifier) @type)
 
 ; Calls and members
 
@@ -188,8 +191,6 @@
   "at"
   "use"
   "some"
-  "with"
-  "module"
   "typeof"
   "align"
   "addrspace"
@@ -224,7 +225,7 @@
   "=>"
   "?"
   "?*"
-  "@"
+  "#"
 ] @operator
 
 (infix_expression

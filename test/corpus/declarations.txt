@@ -330,7 +330,7 @@ export "c" fn entry() -> i32 {
         (integer_literal)))))
 
 ================================================================================
-Static conditionals and module properties
+Static conditionals
 ================================================================================
 
 static if target.os == "linux" {
@@ -338,7 +338,6 @@ static if target.os == "linux" {
 } else static if wasm {
 } else {
 }
-module with module.property(name: "v")
 
 --------------------------------------------------------------------------------
 
@@ -364,12 +363,4 @@ module with module.property(name: "v")
     (static_conditional_declaration
       (identifier)
       (declaration_group)
-      (declaration_group)))
-  (module_property_declaration
-    (function_property_clause
-      (identifier)
-      (identifier)
-      (function_property
-        (identifier)
-        (string_literal
-          (string_content))))))
+      (declaration_group))))
