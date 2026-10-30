@@ -8,6 +8,10 @@
         "named": true
       },
       {
+        "type": "directive",
+        "named": true
+      },
+      {
         "type": "enum_declaration",
         "named": true
       },
@@ -33,10 +37,6 @@
       },
       {
         "type": "interface_declaration",
-        "named": true
-      },
-      {
-        "type": "module_property_declaration",
         "named": true
       },
       {
@@ -1008,7 +1008,102 @@
       "required": false,
       "types": [
         {
+          "type": "directive",
+          "named": true
+        },
+        {
           "type": "function_declaration",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "directive",
+    "named": true,
+    "fields": {
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "directive_argument",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "directive_argument",
+    "named": true,
+    "fields": {
+      "name": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "value": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "boolean_literal",
+            "named": true
+          },
+          {
+            "type": "directive_tuple",
+            "named": true
+          },
+          {
+            "type": "integer_literal",
+            "named": true
+          },
+          {
+            "type": "string_literal",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "directive_tuple",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "boolean_literal",
+          "named": true
+        },
+        {
+          "type": "directive_tuple",
+          "named": true
+        },
+        {
+          "type": "integer_literal",
+          "named": true
+        },
+        {
+          "type": "string_literal",
           "named": true
         }
       ]
@@ -1401,7 +1496,7 @@
           "named": true
         },
         {
-          "type": "function_property_clause",
+          "type": "directive",
           "named": true
         }
       ]
@@ -1459,13 +1554,9 @@
       }
     },
     "children": {
-      "multiple": true,
+      "multiple": false,
       "required": false,
       "types": [
-        {
-          "type": "function_property_clause",
-          "named": true
-        },
         {
           "type": "symbol_name",
           "named": true
@@ -1567,10 +1658,6 @@
           "named": true
         },
         {
-          "type": "function_property_clause",
-          "named": true
-        },
-        {
           "type": "symbol_name",
           "named": true
         },
@@ -1584,68 +1671,6 @@
         },
         {
           "type": "where_clause",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "function_property",
-    "named": true,
-    "fields": {
-      "name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      },
-      "value": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "_expression",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "function_property_clause",
-    "named": true,
-    "fields": {
-      "namespace": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      },
-      "operation": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      }
-    },
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "function_property",
           "named": true
         }
       ]
@@ -1679,6 +1704,10 @@
       "multiple": true,
       "required": false,
       "types": [
+        {
+          "type": "directive",
+          "named": true
+        },
         {
           "type": "function_declaration",
           "named": true
@@ -2236,21 +2265,6 @@
           }
         ]
       }
-    }
-  },
-  {
-    "type": "module_property_declaration",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "function_property_clause",
-          "named": true
-        }
-      ]
     }
   },
   {
@@ -2823,7 +2837,7 @@
     "type": "reference_type",
     "named": true,
     "fields": {
-      "region": {
+      "role": {
         "multiple": false,
         "required": false,
         "types": [
@@ -4152,6 +4166,10 @@
     "named": false
   },
   {
+    "type": "#",
+    "named": false
+  },
+  {
     "type": "%",
     "named": false
   },
@@ -4414,10 +4432,6 @@
     "named": true
   },
   {
-    "type": "module",
-    "named": false
-  },
-  {
     "type": "module_doc_comment",
     "named": true,
     "extra": true
@@ -4540,10 +4554,6 @@
   },
   {
     "type": "while",
-    "named": false
-  },
-  {
-    "type": "with",
     "named": false
   },
   {

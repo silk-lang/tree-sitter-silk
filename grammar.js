@@ -110,7 +110,9 @@ module.exports = grammar({
       $.foreign_static_declaration,
       $.export_static_declaration,
       $.static_conditional_declaration,
-      $.module_property_declaration,
+      // A directive describes the declaration that follows it; like a doc comment, it is a sibling
+      // in the tree, so the grammar need not carry every declaration's prefix at once.
+      $.directive,
     ),
 
     visibility: _ => 'pub',
@@ -254,7 +256,7 @@ module.exports = grammar({
       field('body', $.declaration_list),
     ),
 
-    declaration_list: $ => seq('{', repeat($.function_declaration), '}'),
+    declaration_list: $ => seq('{', repeat(choice($.directive, $.function_declaration)), '}'),
 
     role_declaration: $ => seq(
       optional($.visibility),
@@ -272,7 +274,7 @@ module.exports = grammar({
       field('body', $.impl_body),
     ),
 
-    impl_body: $ => seq('{', repeat(choice($.impl_operation, $.function_declaration)), '}'),
+    impl_body: $ => seq('{', repeat(choice($.impl_operation, $.directive, $.function_declaration)), '}'),
 
     // `name: Path` binds an interface operation to an existing function.
     impl_operation: $ => seq(field('name', $.identifier), ':', field('target', $.type_path)),
@@ -293,7 +295,6 @@ module.exports = grammar({
       optional(field('requirements', $.requirement_row)),
       optional($.where_clause),
       optional($.symbol_name),
-      repeat($.function_property_clause),
       optional(field('body', $.block)),
     ),
 
@@ -312,7 +313,6 @@ module.exports = grammar({
       ':',
       field('type', $._type),
       optional($.symbol_name),
-      repeat($.function_property_clause),
     ),
 
     export_static_declaration: $ => seq(
@@ -337,20 +337,27 @@ module.exports = grammar({
 
     declaration_group: $ => seq('{', repeat($._declaration), '}'),
 
-    module_property_declaration: $ => seq('module', $.function_property_clause),
+    // `@name` or `@name(argument, ...)` before a declaration or a foreign function type. Arguments
+    // are literals only, so a directive never names a value, a type or a function.
+    directive: $ => prec.right(seq(
+      '@',
+      field('name', $.identifier),
+      optional(seq('(', commaSep($.directive_argument), ')')),
+    )),
 
-    // `with Namespace.operation(name: value, ...)`
-    function_property_clause: $ => seq(
-      'with',
-      field('namespace', $.identifier),
-      '.',
-      field('operation', $.identifier),
-      '(',
-      commaSep($.function_property),
-      ')',
+    directive_argument: $ => seq(
+      optional(seq(field('name', $.identifier), ':')),
+      field('value', $._directive_literal),
     ),
 
-    function_property: $ => seq(field('name', $.identifier), ':', field('value', $._expression)),
+    _directive_literal: $ => choice(
+      $.string_literal,
+      alias($._signed_integer, $.integer_literal),
+      $.boolean_literal,
+      $.directive_tuple,
+    ),
+
+    directive_tuple: $ => seq('(', commaSep($._directive_literal), ')'),
 
     // ---------------------------------------------------------------------------------------
     // Callable contracts
@@ -479,7 +486,7 @@ module.exports = grammar({
       optional($.lifetime),
       optional('mut'),
       field('type', $._type_primary),
-      optional(seq('@', field('region', $.identifier))),
+      optional(seq('#', field('role', $.identifier))),
     )),
 
     slice_type: $ => seq('&', optional($.lifetime), optional('mut'), '[', field('element', $._type), ']'),
@@ -512,6 +519,7 @@ module.exports = grammar({
     callable_mode: _ => choice('mut', 'once'),
 
     foreign_function_type: $ => prec.right(seq(
+      repeat($.directive),
       'extern',
       field('abi', $.string_literal),
       optional('unsafe'),
@@ -521,7 +529,6 @@ module.exports = grammar({
       ')',
       '->',
       field('return_type', $._type),
-      repeat($.function_property_clause),
     )),
 
     row_without: $ => seq('Without', token.immediate('<'), $._row_operand, ',', $._row_operand, '>'),

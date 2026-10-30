@@ -74,10 +74,10 @@ where T provides Hash from Box<T> {
                   (identifier))))))))))
 
 ================================================================================
-Test functions and properties
+Test functions
 ================================================================================
 
-test fn addsNumbers() -> () with test.timeout(limit: 5s) {
+test fn addsNumbers() -> () {
   return
 }
 fn identity(value: i32) -> some<T: Copy> T {
@@ -93,12 +93,6 @@ fn identity(value: i32) -> some<T: Copy> T {
     (parameter_list)
     (return_type
       (unit_type))
-    (function_property_clause
-      (identifier)
-      (identifier)
-      (function_property
-        (identifier)
-        (duration_literal)))
     (block
       (return_statement)))
   (function_declaration
@@ -229,3 +223,131 @@ fn run<?R>(body: Effect<'e & 'f; T ! Failure ? R>) -> Without<R, &Clock> {
     (block
       (return_statement
         (identifier)))))
+
+================================================================================
+Directives
+================================================================================
+
+@inlineAlways
+@features("avx2", "fma")
+pub fn fast() -> () {
+  return
+}
+@foreign(memory: "read", noCapture: ("buffer"), flag: true, count: -1)
+@callbacks("compare")
+unsafe extern "C" fn sort(buffer: *mut u8, compare: Compare) -> () as "sort"
+service Port {
+  @nonParking
+  fn close(self: &mut Self) -> ()
+}
+type Compare = @foreign(memory: "none") extern "C" fn(i32) -> i32
+fn read(value: &Port #Reader) -> () {
+  return
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (identifier))
+  (directive
+    (identifier)
+    (directive_argument
+      (string_literal
+        (string_content)))
+    (directive_argument
+      (string_literal
+        (string_content))))
+  (function_declaration
+    (visibility)
+    (identifier)
+    (parameter_list)
+    (return_type
+      (unit_type))
+    (block
+      (return_statement)))
+  (directive
+    (identifier)
+    (directive_argument
+      (identifier)
+      (string_literal
+        (string_content)))
+    (directive_argument
+      (identifier)
+      (directive_tuple
+        (string_literal
+          (string_content))))
+    (directive_argument
+      (identifier)
+      (boolean_literal))
+    (directive_argument
+      (identifier)
+      (integer_literal)))
+  (directive
+    (identifier)
+    (directive_argument
+      (string_literal
+        (string_content))))
+  (function_declaration
+    (foreign_marker
+      (string_literal
+        (string_content)))
+    (identifier)
+    (parameter_list
+      (parameter
+        (identifier)
+        (pointer_type
+          (type_path
+            (type_identifier))))
+      (parameter
+        (identifier)
+        (type_path
+          (type_identifier))))
+    (return_type
+      (unit_type))
+    (symbol_name
+      (string_literal
+        (string_content))))
+  (service_declaration
+    (type_identifier)
+    (declaration_list
+      (directive
+        (identifier))
+      (function_declaration
+        (identifier)
+        (parameter_list
+          (parameter
+            (identifier)
+            (reference_type
+              (type_path
+                (type_identifier)))))
+        (return_type
+          (unit_type)))))
+  (type_alias_declaration
+    (type_identifier)
+    (foreign_function_type
+      (directive
+        (identifier)
+        (directive_argument
+          (identifier)
+          (string_literal
+            (string_content))))
+      (string_literal
+        (string_content))
+      (type_path
+        (type_identifier))
+      (type_path
+        (type_identifier))))
+  (function_declaration
+    (identifier)
+    (parameter_list
+      (parameter
+        (identifier)
+        (reference_type
+          (type_path
+            (type_identifier))
+          (identifier))))
+    (return_type
+      (unit_type))
+    (block
+      (return_statement))))
