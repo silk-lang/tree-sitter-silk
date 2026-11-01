@@ -56,8 +56,13 @@ Generation takes a minute or two.
 
 `zed/` is a Zed extension built on this grammar, with highlighting, outline, bracket matching,
 indentation and Vim text objects. It also starts the Silk language server, `silk lsp`, from the
-`silk` tool on PATH, which serves with the Silk version each folder pins. To use another binary,
-set it in Zed's settings:
+`silk` tool on PATH, which serves with the Silk version each folder pins. When that version is
+missing, the extension enables the launcher's automatic installation before the server starts.
+The first launch may take longer while the toolchain downloads. This requires the `silk` launcher
+to be installed; it does not change your default Silk version or the project's pin.
+
+To use a custom launcher or a directly installed compiler (`silkc`), set its absolute path in
+Zed's settings. Both accept the `lsp` argument:
 
 ```json
 { "lsp": { "silk": { "binary": { "path": "/path/to/silk", "arguments": ["lsp"] } } } }
@@ -65,6 +70,23 @@ set it in Zed's settings:
 
 To try it, install Rust with rustup (Zed builds the extension to WebAssembly), open the command
 palette in Zed, run **zed: install dev extension** and pick the `zed/` folder.
+
+Automatic installation is enabled by default. To disable it, set `auto_install` to `false`
+in Zed's settings:
+
+```json
+{ "lsp": { "silk": { "settings": { "auto_install": false } } } }
+```
+
+An explicit `auto_install` value takes precedence over `SILK_AUTO_INSTALL` in both
+`lsp.silk.binary.env` and the shell. When omitted, the extension honors that environment
+variable (Zed's binary environment wins over the shell), defaulting to automatic installation
+when neither sets it. Restart the language server after changing this startup setting.
+
+With automatic installation disabled, run `silk use` from the project root to install its
+required version, then **editor: restart language server** with a `.silk` file active. Use
+`silk use which` to inspect the selected version. A direct `silkc` path always uses that compiler;
+it bypasses the launcher's version selection and automatic installation.
 
 `zed/languages/silk/highlights.scm` is generated from `queries/highlights.scm` with Zed's capture
 names (`bun run zed-queries`), so edit the shared query, not the copy. `zed/extension.toml` pins

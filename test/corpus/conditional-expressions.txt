@@ -1,0 +1,141 @@
+================================================================================
+Conditional values and statement boundaries
+================================================================================
+
+fn choose() -> i32 {
+  let value = if ready { 1 } else { 2 }
+  value = if ready { run make() } else if other { 3 } else { 4 }
+  consume(if ready { value } else { 0 })
+  let found = if let Option<i32>.Some { value } = item { value } else { 0 }
+  if ready { consume(value) } else { consume(0) }
+  return match item {
+    _ => if ready { 1 } else { 2 }
+  }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (identifier)
+    (parameter_list)
+    (return_type
+      (type_path
+        (type_identifier)))
+    (block
+      (binding_statement
+        (identifier)
+        (conditional_expression
+          (identifier)
+          (block
+            (expression_statement
+              (integer_literal)))
+          (block
+            (expression_statement
+              (integer_literal)))))
+      (assignment_statement
+        (identifier)
+        (conditional_expression
+          (identifier)
+          (block
+            (expression_statement
+              (run_expression
+                (call_expression
+                  (identifier)
+                  (argument_list)))))
+          (conditional_expression
+            (identifier)
+            (block
+              (expression_statement
+                (integer_literal)))
+            (block
+              (expression_statement
+                (integer_literal))))))
+      (expression_statement
+        (call_expression
+          (identifier)
+          (argument_list
+            (conditional_expression
+              (identifier)
+              (block
+                (expression_statement
+                  (identifier)))
+              (block
+                (expression_statement
+                  (integer_literal)))))))
+      (binding_statement
+        (identifier)
+        (pattern_conditional_expression
+          (union_variant_pattern
+            (applied_member_selector
+              (applied_type
+                (type_path
+                  (type_identifier))
+                (type_arguments
+                  (type_path
+                    (type_identifier))))
+              (identifier))
+            (field_pattern_list
+              (pattern_field
+                (field_identifier))))
+          (identifier)
+          (block
+            (expression_statement
+              (identifier)))
+          (block
+            (expression_statement
+              (integer_literal)))))
+      (conditional_statement
+        (identifier)
+        (block
+          (expression_statement
+            (call_expression
+              (identifier)
+              (argument_list
+                (identifier)))))
+        (block
+          (expression_statement
+            (call_expression
+              (identifier)
+              (argument_list
+                (integer_literal))))))
+      (return_statement
+        (match_expression
+          (identifier)
+          (match_block
+            (match_arm
+              (universal_pattern)
+              (conditional_expression
+                (identifier)
+                (block
+                  (expression_statement
+                    (integer_literal)))
+                (block
+                  (expression_statement
+                    (integer_literal)))))))))))
+
+================================================================================
+Returned conditional is a value rather than a separate statement
+================================================================================
+
+fn direct() -> i32 { return if true { 1 } else { 2 } }
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (identifier)
+    (parameter_list)
+    (return_type
+      (type_path
+        (type_identifier)))
+    (block
+      (return_statement
+        (conditional_expression
+          (boolean_literal)
+          (block
+            (expression_statement
+              (integer_literal)))
+          (block
+            (expression_statement
+              (integer_literal))))))))
