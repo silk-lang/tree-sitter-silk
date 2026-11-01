@@ -64,6 +64,8 @@ module.exports = grammar({
 
   supertypes: $ => [$._declaration, $._statement, $._expression, $._type, $._pattern],
 
+  inline: $ => [$._else_clause, $._expression_else_clause],
+
   conflicts: $ => [
     // `a < b` against a generic suffix `f<T>(x)`, `Option<T>.Some`, or `Box<T> {..}`.
     [$._expression, $.type_path],
@@ -572,14 +574,14 @@ module.exports = grammar({
 
     pattern_binding_statement: $ => seq('let', field('pattern', $._pattern), '=', field('value', $._expression)),
 
-    conditional_statement: $ => seq(
+    conditional_statement: $ => prec(1, seq(
       'if',
       field('condition', $._expression),
       field('consequence', $.block),
       optional($._else_clause),
-    ),
+    )),
 
-    pattern_conditional_statement: $ => seq(
+    pattern_conditional_statement: $ => prec(1, seq(
       'if',
       'let',
       field('pattern', $._pattern),
@@ -587,7 +589,7 @@ module.exports = grammar({
       field('value', $._expression),
       field('consequence', $.block),
       optional($._else_clause),
-    ),
+    )),
 
     _else_clause: $ => seq(
       'else',
@@ -661,6 +663,8 @@ module.exports = grammar({
       $.applied_member_expression,
       $.anonymous_callable_expression,
       $.effect_expression,
+      $.conditional_expression,
+      $.pattern_conditional_expression,
       $.match_expression,
       $.compile_error_expression,
       $.run_expression,
@@ -721,6 +725,28 @@ module.exports = grammar({
     ),
 
     effect_expression: $ => seq('effect', $.block),
+
+    // Value-selecting conditionals require a final else, including through else-if chains.
+    // Statement rules have precedence when the same syntax starts a statement.
+    conditional_expression: $ => seq(
+      'if',
+      field('condition', $._expression),
+      field('consequence', $.block),
+      $._expression_else_clause,
+    ),
+
+    pattern_conditional_expression: $ => seq(
+      'if', 'let',
+      field('pattern', $._pattern),
+      '=', field('value', $._expression),
+      field('consequence', $.block),
+      $._expression_else_clause,
+    ),
+
+    _expression_else_clause: $ => seq(
+      'else',
+      field('alternative', choice($.block, $.conditional_expression, $.pattern_conditional_expression)),
+    ),
 
     match_expression: $ => seq(
       'match',
