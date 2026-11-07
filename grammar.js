@@ -39,10 +39,6 @@ function sepBy1(rule, separator) {
   return seq(rule, repeat(seq(separator, rule)));
 }
 
-/**
- * A comma-separated list that admits a trailing comma.
- * @param {RuleOrLiteral} rule
- */
 // The environment, parameters and result shared by `fn` and `effect fn` callable types.
 function callableSignature($) {
   return [
@@ -55,6 +51,10 @@ function callableSignature($) {
   ];
 }
 
+/**
+ * A comma-separated list that admits a trailing comma.
+ * @param {RuleOrLiteral} rule
+ */
 function commaSep(rule) {
   return optional(seq(sepBy1(rule, ','), optional(',')));
 }

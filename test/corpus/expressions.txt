@@ -351,3 +351,51 @@ fn f() -> () {
             (identifier)
             (argument_list
               (identifier))))))))
+
+==================
+Contextual tuple literals
+==================
+
+fn pairs() -> Pair {
+  let unit = .()
+  let one = .(a)
+  let borrowed = &.(count)
+  take(.(1, 2), .(true,))
+  return .(a, b)
+}
+
+---
+
+(source_file
+  (function_declaration
+    (identifier)
+    (parameter_list)
+    (return_type
+      (type_path
+        (type_identifier)))
+    (block
+      (binding_statement
+        (identifier)
+        (contextual_tuple_literal_expression))
+      (binding_statement
+        (identifier)
+        (contextual_tuple_literal_expression
+          (identifier)))
+      (binding_statement
+        (identifier)
+        (borrow_expression
+          (contextual_tuple_literal_expression
+            (identifier))))
+      (expression_statement
+        (call_expression
+          (identifier)
+          (argument_list
+            (contextual_tuple_literal_expression
+              (integer_literal)
+              (integer_literal))
+            (contextual_tuple_literal_expression
+              (boolean_literal)))))
+      (return_statement
+        (contextual_tuple_literal_expression
+          (identifier)
+          (identifier))))))
