@@ -9,7 +9,7 @@ repository = "https://github.com/silk-lang/tree-sitter-silk"
 # The grammar is this repository. Bump rev to a newer main commit after grammar changes.
 [grammars.silk]
 repository = "https://github.com/silk-lang/tree-sitter-silk"
-rev = "97b368c79b598dc64b17f7acfc17565cdc0fbc3e"
+rev = "45837ad63745f465a8c95703cfa5cb8fb30572e9"
 
 # Runs `silk lsp` from the silk tool on PATH; see src/lib.rs.
 [language_servers.silk]
