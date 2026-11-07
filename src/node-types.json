@@ -836,6 +836,26 @@
           }
         ]
       },
+      "failures": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "failure_row",
+            "named": true
+          }
+        ]
+      },
+      "requirements": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "requirement_row",
+            "named": true
+          }
+        ]
+      },
       "return_type": {
         "multiple": false,
         "required": true,

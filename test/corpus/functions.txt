@@ -351,3 +351,53 @@ fn read(value: &Port #Reader) -> () {
       (unit_type))
     (block
       (return_statement))))
+
+==================
+Effect callable types and the elided lifetime placeholder
+==================
+
+fn apply<F: once effect fn<'env>(i32) -> i32 ! Shortfall ? &Clock>(f: F, span: Span<'_>) -> &'_ i32 { return () }
+
+---
+
+(source_file
+  (function_declaration
+    name: (identifier)
+    type_parameters: (type_parameter_list
+      (type_parameter
+        name: (type_identifier)
+        (callable_type
+          (callable_mode)
+          (callable_environment
+            (lifetime))
+          (type_path
+            (type_identifier))
+          return_type: (type_path
+            (type_identifier))
+          failures: (failure_row
+            (type_path
+              (type_identifier)))
+          requirements: (requirement_row
+            (reference_type
+              type: (type_path
+                (type_identifier)))))))
+    parameters: (parameter_list
+      (parameter
+        name: (identifier)
+        type: (type_path
+          (type_identifier)))
+      (parameter
+        name: (identifier)
+        type: (applied_type
+          type: (type_path
+            (type_identifier))
+          arguments: (type_arguments
+            (lifetime)))))
+    return_type: (return_type
+      (reference_type
+        (lifetime)
+        type: (type_path
+          (type_identifier))))
+    body: (block
+      (return_statement
+        (unit_expression)))))

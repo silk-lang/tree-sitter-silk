@@ -43,6 +43,18 @@ function sepBy1(rule, separator) {
  * A comma-separated list that admits a trailing comma.
  * @param {RuleOrLiteral} rule
  */
+// The environment, parameters and result shared by `fn` and `effect fn` callable types.
+function callableSignature($) {
+  return [
+    optional($.callable_environment),
+    '(',
+    commaSep($._type),
+    ')',
+    '->',
+    field('return_type', $._type),
+  ];
+}
+
 function commaSep(rule) {
   return optional(seq(sepBy1(rule, ','), optional(',')));
 }
@@ -392,7 +404,7 @@ module.exports = grammar({
 
     _requirement_row_member: $ => choice($.requirement, $._type_primary),
 
-    requirement: $ => prec.right(choice(
+    requirement: $ => prec.right(1, choice(
       seq('&', optional('mut'), $._type_primary, optional(seq('at', $.type_path))),
       seq($._type_primary, 'at', $.type_path),
     )),
@@ -505,17 +517,21 @@ module.exports = grammar({
 
     fixed_array_type: $ => seq('[', field('element', $._type), ';', field('length', $._expression), ']'),
 
+    // `effect fn(A) -> B ! F ? S` is a callable whose call returns an Effect.
     callable_type: $ => prec.right(seq(
       optional(seq('for', field('binders', $.type_parameter_list))),
       optional('unsafe'),
       optional($.callable_mode),
-      'fn',
-      optional($.callable_environment),
-      '(',
-      commaSep($._type),
-      ')',
-      '->',
-      field('return_type', $._type),
+      choice(
+        seq('fn', ...callableSignature($)),
+        seq(
+          'effect',
+          'fn',
+          ...callableSignature($),
+          optional(field('failures', $.failure_row)),
+          optional(field('requirements', $.requirement_row)),
+        ),
+      ),
     )),
 
     callable_mode: _ => choice('mut', 'once'),
