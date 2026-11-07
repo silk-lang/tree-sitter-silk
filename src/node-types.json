@@ -126,6 +126,10 @@
         "named": true
       },
       {
+        "type": "contextual_tuple_literal_expression",
+        "named": true
+      },
+      {
         "type": "duration_literal",
         "named": true
       },
@@ -836,6 +840,26 @@
           }
         ]
       },
+      "failures": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "failure_row",
+            "named": true
+          }
+        ]
+      },
+      "requirements": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "requirement_row",
+            "named": true
+          }
+        ]
+      },
       "return_type": {
         "multiple": false,
         "required": true,
@@ -1029,6 +1053,21 @@
           }
         ]
       }
+    }
+  },
+  {
+    "type": "contextual_tuple_literal_expression",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "_expression",
+          "named": true
+        }
+      ]
     }
   },
   {

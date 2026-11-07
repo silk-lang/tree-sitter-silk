@@ -39,6 +39,18 @@ function sepBy1(rule, separator) {
   return seq(rule, repeat(seq(separator, rule)));
 }
 
+// The environment, parameters and result shared by `fn` and `effect fn` callable types.
+function callableSignature($) {
+  return [
+    optional($.callable_environment),
+    '(',
+    commaSep($._type),
+    ')',
+    '->',
+    field('return_type', $._type),
+  ];
+}
+
 /**
  * A comma-separated list that admits a trailing comma.
  * @param {RuleOrLiteral} rule
@@ -359,7 +371,7 @@ module.exports = grammar({
       $.directive_tuple,
     ),
 
-    directive_tuple: $ => seq('(', commaSep($._directive_literal), ')'),
+    directive_tuple: $ => seq(optional('.'), '(', commaSep($._directive_literal), ')'),
 
     // ---------------------------------------------------------------------------------------
     // Callable contracts
@@ -392,7 +404,7 @@ module.exports = grammar({
 
     _requirement_row_member: $ => choice($.requirement, $._type_primary),
 
-    requirement: $ => prec.right(choice(
+    requirement: $ => prec.right(1, choice(
       seq('&', optional('mut'), $._type_primary, optional(seq('at', $.type_path))),
       seq($._type_primary, 'at', $.type_path),
     )),
@@ -505,17 +517,21 @@ module.exports = grammar({
 
     fixed_array_type: $ => seq('[', field('element', $._type), ';', field('length', $._expression), ']'),
 
+    // `effect fn(A) -> B ! F ? S` is a callable whose call returns an Effect.
     callable_type: $ => prec.right(seq(
       optional(seq('for', field('binders', $.type_parameter_list))),
       optional('unsafe'),
       optional($.callable_mode),
-      'fn',
-      optional($.callable_environment),
-      '(',
-      commaSep($._type),
-      ')',
-      '->',
-      field('return_type', $._type),
+      choice(
+        seq('fn', ...callableSignature($)),
+        seq(
+          'effect',
+          'fn',
+          ...callableSignature($),
+          optional(field('failures', $.failure_row)),
+          optional(field('requirements', $.requirement_row)),
+        ),
+      ),
     )),
 
     callable_mode: _ => choice('mut', 'once'),
@@ -660,6 +676,7 @@ module.exports = grammar({
       $.array_repeat_expression,
       $.struct_literal_expression,
       $.contextual_record_literal_expression,
+      $.contextual_tuple_literal_expression,
       $.applied_member_expression,
       $.anonymous_callable_expression,
       $.effect_expression,
@@ -697,6 +714,9 @@ module.exports = grammar({
     ),
 
     contextual_record_literal_expression: $ => seq('.', field('fields', $.field_initializer_list)),
+
+    // `.(a, b)` is a tuple whose type comes from where it is used.
+    contextual_tuple_literal_expression: $ => seq('.', '(', commaSep($._expression), ')'),
 
     field_initializer_list: $ => seq('{', commaSep($.struct_field_initializer), '}'),
 

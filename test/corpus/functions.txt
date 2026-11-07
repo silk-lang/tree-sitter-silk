@@ -351,3 +351,158 @@ fn read(value: &Port #Reader) -> () {
       (unit_type))
     (block
       (return_statement))))
+
+==================
+Effect callable types and the elided lifetime placeholder
+==================
+
+fn apply<F: once effect fn<'env>(i32) -> i32 ! Shortfall ? &Clock>(f: F, span: Span<'_>) -> &'_ i32 { return () }
+
+---
+
+(source_file
+  (function_declaration
+    name: (identifier)
+    type_parameters: (type_parameter_list
+      (type_parameter
+        name: (type_identifier)
+        (callable_type
+          (callable_mode)
+          (callable_environment
+            (lifetime))
+          (type_path
+            (type_identifier))
+          return_type: (type_path
+            (type_identifier))
+          failures: (failure_row
+            (type_path
+              (type_identifier)))
+          requirements: (requirement_row
+            (reference_type
+              type: (type_path
+                (type_identifier)))))))
+    parameters: (parameter_list
+      (parameter
+        name: (identifier)
+        type: (type_path
+          (type_identifier)))
+      (parameter
+        name: (identifier)
+        type: (applied_type
+          type: (type_path
+            (type_identifier))
+          arguments: (type_arguments
+            (lifetime)))))
+    return_type: (return_type
+      (reference_type
+        (lifetime)
+        type: (type_path
+          (type_identifier))))
+    body: (block
+      (return_statement
+        (unit_expression)))))
+
+==================
+Effect callable type variants
+==================
+
+type Plain = effect fn() -> i32
+type Mutable = unsafe mut effect fn(i32) -> i32
+type Bound = for<'a> once effect fn<'a>(&'a i32) -> i32
+type Fails = effect fn() -> i32 ! Shortfall | Overflow
+type Needs = effect fn() -> i32 ? Clock | Random
+type Nested = fn() -> effect fn() -> i32 ! Shortfall
+
+---
+
+(source_file
+  (type_alias_declaration
+    (type_identifier)
+    (callable_type
+      (type_path
+        (type_identifier))))
+  (type_alias_declaration
+    (type_identifier)
+    (callable_type
+      (callable_mode)
+      (type_path
+        (type_identifier))
+      (type_path
+        (type_identifier))))
+  (type_alias_declaration
+    (type_identifier)
+    (callable_type
+      (type_parameter_list
+        (lifetime_parameter
+          (lifetime)))
+      (callable_mode)
+      (callable_environment
+        (lifetime))
+      (reference_type
+        (lifetime)
+        (type_path
+          (type_identifier)))
+      (type_path
+        (type_identifier))))
+  (type_alias_declaration
+    (type_identifier)
+    (callable_type
+      (type_path
+        (type_identifier))
+      (failure_row
+        (union_type
+          (type_path
+            (type_identifier))
+          (type_path
+            (type_identifier))))))
+  (type_alias_declaration
+    (type_identifier)
+    (callable_type
+      (type_path
+        (type_identifier))
+      (requirement_row
+        (type_path
+          (type_identifier))
+        (type_path
+          (type_identifier)))))
+  (type_alias_declaration
+    (type_identifier)
+    (callable_type
+      (callable_type
+        (type_path
+          (type_identifier))
+        (failure_row
+          (type_path
+            (type_identifier)))))))
+
+==================
+Dotted directive tuples
+==================
+
+@foreign(noCapture: .("buffer", "length"), flags: .(true))
+fn native() -> () { return () }
+
+---
+
+(source_file
+  (directive
+    (identifier)
+    (directive_argument
+      (identifier)
+      (directive_tuple
+        (string_literal
+          (string_content))
+        (string_literal
+          (string_content))))
+    (directive_argument
+      (identifier)
+      (directive_tuple
+        (boolean_literal))))
+  (function_declaration
+    (identifier)
+    (parameter_list)
+    (return_type
+      (unit_type))
+    (block
+      (return_statement
+        (unit_expression)))))
