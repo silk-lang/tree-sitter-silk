@@ -126,6 +126,10 @@
         "named": true
       },
       {
+        "type": "contextual_tuple_literal_expression",
+        "named": true
+      },
+      {
         "type": "duration_literal",
         "named": true
       },
@@ -1049,6 +1053,21 @@
           }
         ]
       }
+    }
+  },
+  {
+    "type": "contextual_tuple_literal_expression",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "_expression",
+          "named": true
+        }
+      ]
     }
   },
   {

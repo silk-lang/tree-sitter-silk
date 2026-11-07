@@ -371,7 +371,7 @@ module.exports = grammar({
       $.directive_tuple,
     ),
 
-    directive_tuple: $ => seq('(', commaSep($._directive_literal), ')'),
+    directive_tuple: $ => seq(optional('.'), '(', commaSep($._directive_literal), ')'),
 
     // ---------------------------------------------------------------------------------------
     // Callable contracts
@@ -676,6 +676,7 @@ module.exports = grammar({
       $.array_repeat_expression,
       $.struct_literal_expression,
       $.contextual_record_literal_expression,
+      $.contextual_tuple_literal_expression,
       $.applied_member_expression,
       $.anonymous_callable_expression,
       $.effect_expression,
@@ -713,6 +714,9 @@ module.exports = grammar({
     ),
 
     contextual_record_literal_expression: $ => seq('.', field('fields', $.field_initializer_list)),
+
+    // `.(a, b)` is a tuple whose type comes from where it is used.
+    contextual_tuple_literal_expression: $ => seq('.', '(', commaSep($._expression), ')'),
 
     field_initializer_list: $ => seq('{', commaSep($.struct_field_initializer), '}'),
 
