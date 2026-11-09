@@ -399,3 +399,91 @@ fn pairs() -> Pair {
         (contextual_tuple_literal_expression
           (identifier)
           (identifier))))))
+
+==================
+Field init shorthand
+==================
+
+fn make(x: i32, y: i32) -> Point {
+  let label = .{x, name: "p"}
+  return Point {x, y}
+}
+
+---
+
+(source_file
+  (function_declaration
+    (identifier)
+    (parameter_list
+      (parameter
+        (identifier)
+        (type_path
+          (type_identifier)))
+      (parameter
+        (identifier)
+        (type_path
+          (type_identifier))))
+    (return_type
+      (type_path
+        (type_identifier)))
+    (block
+      (binding_statement
+        (identifier)
+        (contextual_record_literal_expression
+          (field_initializer_list
+            (struct_field_initializer
+              (field_identifier))
+            (struct_field_initializer
+              (field_identifier)
+              (string_literal
+                (string_content))))))
+      (return_statement
+        (struct_literal_expression
+          (type_path
+            (type_identifier))
+          (field_initializer_list
+            (struct_field_initializer
+              (field_identifier))
+            (struct_field_initializer
+              (field_identifier))))))))
+
+==================
+Static field loops and computed variants
+==================
+
+fn build<T>() -> T {
+  let v = U.[variant] {}
+  return T { static for field in fields { [field]: 0 } }
+}
+
+---
+
+(source_file
+  (function_declaration
+    (identifier)
+    (type_parameter_list
+      (type_parameter
+        (type_identifier)))
+    (parameter_list)
+    (return_type
+      (type_path
+        (type_identifier)))
+    (block
+      (binding_statement
+        (identifier)
+        (computed_variant_expression
+          (type_path
+            (type_identifier))
+          (identifier)
+          (field_initializer_list)))
+      (return_statement
+        (struct_literal_expression
+          (type_path
+            (type_identifier))
+          (field_initializer_list
+            (static_field_initializers
+              (identifier)
+              (identifier)
+              (computed_field_initializer
+                (identifier)
+                (integer_literal)))))))))
