@@ -236,6 +236,10 @@
 
 (rest_pattern) @operator
 
+(range_pattern [".." "..="] @operator)
+
+(alternative_pattern "|" @operator)
+
 (variadic_marker) @operator
 
 [
@@ -269,8 +273,6 @@
 ; Literals
 
 (integer_literal) @number
-
-(integer_pattern) @number
 
 (floating_literal) @number
 

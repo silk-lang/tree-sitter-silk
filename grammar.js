@@ -892,18 +892,37 @@ module.exports = grammar({
     // ---------------------------------------------------------------------------------------
     // Patterns
 
-    _pattern: $ => choice(
+    _pattern: $ => choice($.alternative_pattern, $._single_pattern),
+
+    _single_pattern: $ => choice(
       $.universal_pattern,
-      $.integer_pattern,
+      $.literal_pattern,
+      $.range_pattern,
       $.union_variant_pattern,
       $.enum_member_pattern,
       $.binding_pattern,
       $.nominal_pattern,
     ),
 
+    // `A | B | C`: the arm matches when any alternative does.
+    alternative_pattern: $ => prec.left(seq($._single_pattern, repeat1(seq('|', $._single_pattern)))),
+
     universal_pattern: _ => '_',
 
-    integer_pattern: $ => $._signed_integer,
+    literal_pattern: $ => choice(
+      alias($._signed_integer, $.integer_literal),
+      $.character_literal,
+      $.boolean_literal,
+    ),
+
+    // `1..=5`, `0..10`, `'a'..`, `..=-1`.
+    range_pattern: $ => choice(
+      seq(field('start', $._range_bound), choice('..=', '..'), field('end', $._range_bound)),
+      prec(-1, seq(field('start', $._range_bound), '..')),
+      seq('..=', field('end', $._range_bound)),
+    ),
+
+    _range_bound: $ => choice(alias($._signed_integer, $.integer_literal), $.character_literal),
 
     union_variant_pattern: $ => prec.right(seq(
       field('selector', $.applied_member_selector),

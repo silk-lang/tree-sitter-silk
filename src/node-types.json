@@ -232,6 +232,10 @@
     "named": true,
     "subtypes": [
       {
+        "type": "alternative_pattern",
+        "named": true
+      },
+      {
         "type": "binding_pattern",
         "named": true
       },
@@ -240,11 +244,15 @@
         "named": true
       },
       {
-        "type": "integer_pattern",
+        "type": "literal_pattern",
         "named": true
       },
       {
         "type": "nominal_pattern",
+        "named": true
+      },
+      {
+        "type": "range_pattern",
         "named": true
       },
       {
@@ -388,6 +396,45 @@
         "named": true
       }
     ]
+  },
+  {
+    "type": "alternative_pattern",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "binding_pattern",
+          "named": true
+        },
+        {
+          "type": "enum_member_pattern",
+          "named": true
+        },
+        {
+          "type": "literal_pattern",
+          "named": true
+        },
+        {
+          "type": "nominal_pattern",
+          "named": true
+        },
+        {
+          "type": "range_pattern",
+          "named": true
+        },
+        {
+          "type": "union_variant_pattern",
+          "named": true
+        },
+        {
+          "type": "universal_pattern",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "anonymous_callable_expression",
@@ -2212,11 +2259,6 @@
     "fields": {}
   },
   {
-    "type": "integer_pattern",
-    "named": true,
-    "fields": {}
-  },
-  {
     "type": "interface_declaration",
     "named": true,
     "fields": {
@@ -2287,6 +2329,29 @@
         },
         {
           "type": "lifetime",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "literal_pattern",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "boolean_literal",
+          "named": true
+        },
+        {
+          "type": "character_literal",
+          "named": true
+        },
+        {
+          "type": "integer_literal",
           "named": true
         }
       ]
@@ -3053,6 +3118,40 @@
     }
   },
   {
+    "type": "range_pattern",
+    "named": true,
+    "fields": {
+      "end": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "character_literal",
+            "named": true
+          },
+          {
+            "type": "integer_literal",
+            "named": true
+          }
+        ]
+      },
+      "start": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "character_literal",
+            "named": true
+          },
+          {
+            "type": "integer_literal",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
     "type": "reference_type",
     "named": true,
     "fields": {
@@ -3296,6 +3395,11 @@
         }
       ]
     }
+  },
+  {
+    "type": "rest_pattern",
+    "named": true,
+    "fields": {}
   },
   {
     "type": "return_statement",
@@ -4469,6 +4573,14 @@
     "named": false
   },
   {
+    "type": "..",
+    "named": false
+  },
+  {
+    "type": "..=",
+    "named": false
+  },
+  {
     "type": "/",
     "named": false
   },
@@ -4721,10 +4833,6 @@
   },
   {
     "type": "raw_string_literal",
-    "named": true
-  },
-  {
-    "type": "rest_pattern",
     "named": true
   },
   {
