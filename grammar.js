@@ -720,7 +720,11 @@ module.exports = grammar({
 
     field_initializer_list: $ => seq('{', commaSep($.struct_field_initializer), '}'),
 
-    struct_field_initializer: $ => seq(field('name', alias($.identifier, $.field_identifier)), ':', field('value', $._expression)),
+    // `name: value`, or the shorthand `name`, which reads the binding `name`.
+    struct_field_initializer: $ => seq(
+      field('name', alias($.identifier, $.field_identifier)),
+      optional(seq(':', field('value', $._expression))),
+    ),
 
     // `Option<T>.Some` or `Vector<Element>.make`, optionally with record fields.
     applied_member_expression: $ => prec.right(seq(

@@ -399,3 +399,50 @@ fn pairs() -> Pair {
         (contextual_tuple_literal_expression
           (identifier)
           (identifier))))))
+
+==================
+Field init shorthand
+==================
+
+fn make(x: i32, y: i32) -> Point {
+  let label = .{x, name: "p"}
+  return Point {x, y}
+}
+
+---
+
+(source_file
+  (function_declaration
+    (identifier)
+    (parameter_list
+      (parameter
+        (identifier)
+        (type_path
+          (type_identifier)))
+      (parameter
+        (identifier)
+        (type_path
+          (type_identifier))))
+    (return_type
+      (type_path
+        (type_identifier)))
+    (block
+      (binding_statement
+        (identifier)
+        (contextual_record_literal_expression
+          (field_initializer_list
+            (struct_field_initializer
+              (field_identifier))
+            (struct_field_initializer
+              (field_identifier)
+              (string_literal
+                (string_content))))))
+      (return_statement
+        (struct_literal_expression
+          (type_path
+            (type_identifier))
+          (field_initializer_list
+            (struct_field_initializer
+              (field_identifier))
+            (struct_field_initializer
+              (field_identifier))))))))
