@@ -446,3 +446,50 @@ fn make(x: i32, y: i32) -> Point {
               (field_identifier))
             (struct_field_initializer
               (field_identifier))))))))
+
+==================
+Static field loops and computed variants
+==================
+
+fn build<T>() -> T {
+  let v = U.[variant] {}
+  return T { static for field in Reflect.fields<T>() { [field]: 0 } }
+}
+
+---
+
+(source_file
+  (function_declaration
+    (identifier)
+    (type_parameter_list
+      (type_parameter
+        (type_identifier)))
+    (parameter_list)
+    (return_type
+      (type_path
+        (type_identifier)))
+    (block
+      (binding_statement
+        (identifier)
+        (computed_variant_expression
+          (type_path
+            (type_identifier))
+          (identifier)
+          (field_initializer_list)))
+      (return_statement
+        (struct_literal_expression
+          (type_path
+            (type_identifier))
+          (field_initializer_list
+            (static_field_initializers
+              (identifier)
+              (infix_expression
+                (infix_expression
+                  (field_projection_expression
+                    (identifier)
+                    (field_identifier))
+                  (identifier))
+                (unit_expression))
+              (computed_field_initializer
+                (identifier)
+                (integer_literal)))))))))

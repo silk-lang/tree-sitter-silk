@@ -675,6 +675,7 @@ module.exports = grammar({
       $.array_literal_expression,
       $.array_repeat_expression,
       $.struct_literal_expression,
+      $.computed_variant_expression,
       $.contextual_record_literal_expression,
       $.contextual_tuple_literal_expression,
       $.applied_member_expression,
@@ -713,12 +714,36 @@ module.exports = grammar({
       field('fields', $.field_initializer_list),
     ),
 
+    // `U.[variant]` or `U.[variant] { ... }` selects a union variant by a static descriptor.
+    computed_variant_expression: $ => prec.right(seq(
+      field('type', choice($.type_path, $.applied_type)),
+      '.',
+      '[',
+      field('variant', $._expression),
+      ']',
+      optional(field('fields', $.field_initializer_list)),
+    )),
+
     contextual_record_literal_expression: $ => seq('.', field('fields', $.field_initializer_list)),
 
     // `.(a, b)` is a tuple whose type comes from where it is used.
     contextual_tuple_literal_expression: $ => seq('.', '(', commaSep($._expression), ')'),
 
-    field_initializer_list: $ => seq('{', commaSep($.struct_field_initializer), '}'),
+    field_initializer_list: $ => seq('{', commaSep(choice($.struct_field_initializer, $.static_field_initializers)), '}'),
+
+    // `static for field in fields { [field]: value }` initializes one field per static descriptor.
+    static_field_initializers: $ => seq(
+      'static',
+      'for',
+      field('name', $.identifier),
+      'in',
+      field('value', $._expression),
+      '{',
+      commaSep($.computed_field_initializer),
+      '}',
+    ),
+
+    computed_field_initializer: $ => seq('[', field('key', $._expression), ']', ':', field('value', $._expression)),
 
     // `name: value`, or the shorthand `name`, which reads the binding `name`.
     struct_field_initializer: $ => seq(
