@@ -309,7 +309,8 @@ fn f() -> () {
               (block
                 (return_statement)))
             (match_arm
-              (integer_pattern)
+              (literal_pattern
+                (integer_literal))
               (integer_literal))
             (match_arm
               (union_variant_pattern
@@ -399,3 +400,79 @@ fn pairs() -> Pair {
         (contextual_tuple_literal_expression
           (identifier)
           (identifier))))))
+
+================================================================================
+Literal, range and alternative patterns
+================================================================================
+
+fn f(c: char) -> i32 {
+  return match c {
+    -5..0 | 7 => 5
+    'a'..='z' | 'A'..='Z' => 1
+    '0'.. => 2
+    ..='\t' => 3
+    true => 4
+    Color.Red | Color.Blue => 6
+    _ => 0
+  }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (identifier)
+    (parameter_list
+      (parameter
+        (identifier)
+        (type_path
+          (type_identifier))))
+    (return_type
+      (type_path
+        (type_identifier)))
+    (block
+      (return_statement
+        (match_expression
+          (identifier)
+          (match_block
+            (match_arm
+              (alternative_pattern
+                (range_pattern
+                  (integer_literal)
+                  (integer_literal))
+                (literal_pattern
+                  (integer_literal)))
+              (integer_literal))
+            (match_arm
+              (alternative_pattern
+                (range_pattern
+                  (character_literal)
+                  (character_literal))
+                (range_pattern
+                  (character_literal)
+                  (character_literal)))
+              (integer_literal))
+            (match_arm
+              (range_pattern
+                (character_literal))
+              (integer_literal))
+            (match_arm
+              (range_pattern
+                (character_literal))
+              (integer_literal))
+            (match_arm
+              (literal_pattern
+                (boolean_literal))
+              (integer_literal))
+            (match_arm
+              (alternative_pattern
+                (enum_member_pattern
+                  (type_identifier)
+                  (identifier))
+                (enum_member_pattern
+                  (type_identifier)
+                  (identifier)))
+              (integer_literal))
+            (match_arm
+              (universal_pattern)
+              (integer_literal))))))))
