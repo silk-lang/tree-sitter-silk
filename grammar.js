@@ -675,7 +675,7 @@ module.exports = grammar({
       $.array_literal_expression,
       $.array_repeat_expression,
       $.struct_literal_expression,
-      $.variant_select_expression,
+      $.computed_variant_expression,
       $.contextual_record_literal_expression,
       $.contextual_tuple_literal_expression,
       $.applied_member_expression,
@@ -714,15 +714,15 @@ module.exports = grammar({
       field('fields', $.field_initializer_list),
     ),
 
-    // `Union.[variant] { ... }` builds the variant a static descriptor selects.
-    variant_select_expression: $ => seq(
-      field('type', $.type_path),
+    // `U.[variant]` or `U.[variant] { ... }` selects a union variant by a static descriptor.
+    computed_variant_expression: $ => prec.right(seq(
+      field('type', choice($.type_path, $.applied_type)),
       '.',
       '[',
       field('variant', $._expression),
       ']',
-      field('fields', $.field_initializer_list),
-    ),
+      optional(field('fields', $.field_initializer_list)),
+    )),
 
     contextual_record_literal_expression: $ => seq('.', field('fields', $.field_initializer_list)),
 
@@ -743,9 +743,13 @@ module.exports = grammar({
       '}',
     ),
 
-    computed_field_initializer: $ => seq('[', field('name', $._expression), ']', ':', field('value', $._expression)),
+    computed_field_initializer: $ => seq('[', field('key', $._expression), ']', ':', field('value', $._expression)),
 
-    struct_field_initializer: $ => seq(field('name', alias($.identifier, $.field_identifier)), ':', field('value', $._expression)),
+    // `name: value`, or the shorthand `name`, which reads the binding `name`.
+    struct_field_initializer: $ => seq(
+      field('name', alias($.identifier, $.field_identifier)),
+      optional(seq(':', field('value', $._expression))),
+    ),
 
     // `Option<T>.Some` or `Vector<Element>.make`, optionally with record fields.
     applied_member_expression: $ => prec.right(seq(

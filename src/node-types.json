@@ -118,6 +118,10 @@
         "named": true
       },
       {
+        "type": "computed_variant_expression",
+        "named": true
+      },
+      {
         "type": "conditional_expression",
         "named": true
       },
@@ -219,10 +223,6 @@
       },
       {
         "type": "unsafe_expression",
-        "named": true
-      },
-      {
-        "type": "variant_select_expression",
         "named": true
       }
     ]
@@ -960,7 +960,7 @@
     "type": "computed_field_initializer",
     "named": true,
     "fields": {
-      "name": {
+      "key": {
         "multiple": false,
         "required": true,
         "types": [
@@ -971,6 +971,46 @@
         ]
       },
       "value": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "_expression",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "computed_variant_expression",
+    "named": true,
+    "fields": {
+      "fields": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "field_initializer_list",
+            "named": true
+          }
+        ]
+      },
+      "type": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "applied_type",
+            "named": true
+          },
+          {
+            "type": "type_path",
+            "named": true
+          }
+        ]
+      },
+      "variant": {
         "multiple": false,
         "required": true,
         "types": [
@@ -3892,7 +3932,7 @@
       },
       "value": {
         "multiple": false,
-        "required": true,
+        "required": false,
         "types": [
           {
             "type": "_expression",
@@ -4420,42 +4460,6 @@
           "named": true
         }
       ]
-    }
-  },
-  {
-    "type": "variant_select_expression",
-    "named": true,
-    "fields": {
-      "fields": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "field_initializer_list",
-            "named": true
-          }
-        ]
-      },
-      "type": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "type_path",
-            "named": true
-          }
-        ]
-      },
-      "variant": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "_expression",
-            "named": true
-          }
-        ]
-      }
     }
   },
   {
