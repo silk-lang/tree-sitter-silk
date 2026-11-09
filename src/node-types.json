@@ -220,6 +220,10 @@
       {
         "type": "unsafe_expression",
         "named": true
+      },
+      {
+        "type": "variant_select_expression",
+        "named": true
       }
     ]
   },
@@ -953,6 +957,32 @@
     }
   },
   {
+    "type": "computed_field_initializer",
+    "named": true,
+    "fields": {
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "_expression",
+            "named": true
+          }
+        ]
+      },
+      "value": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "_expression",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
     "type": "conditional_expression",
     "named": true,
     "fields": {
@@ -1522,6 +1552,10 @@
       "multiple": true,
       "required": false,
       "types": [
+        {
+          "type": "static_field_initializers",
+          "named": true
+        },
         {
           "type": "struct_field_initializer",
           "named": true
@@ -3660,6 +3694,42 @@
     }
   },
   {
+    "type": "static_field_initializers",
+    "named": true,
+    "fields": {
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "value": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "_expression",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "computed_field_initializer",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "static_for_statement",
     "named": true,
     "fields": {
@@ -4350,6 +4420,42 @@
           "named": true
         }
       ]
+    }
+  },
+  {
+    "type": "variant_select_expression",
+    "named": true,
+    "fields": {
+      "fields": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "field_initializer_list",
+            "named": true
+          }
+        ]
+      },
+      "type": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "type_path",
+            "named": true
+          }
+        ]
+      },
+      "variant": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "_expression",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
