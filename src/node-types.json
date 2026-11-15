@@ -1652,6 +1652,16 @@
     "type": "fixed_array_type",
     "named": true,
     "fields": {
+      "columns": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "integer_literal",
+            "named": true
+          }
+        ]
+      },
       "element": {
         "multiple": false,
         "required": true,
