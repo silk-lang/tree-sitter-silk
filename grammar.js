@@ -85,7 +85,6 @@ module.exports = grammar({
     [$._expression, $.type_arguments],
     // Inside `a < ...`, the right side may also be the start of a generic suffix's type.
     [$.unit_type, $.unit_expression],
-    [$.callable_type, $.parameter_list],
     // After an operand, `<` is either a comparison or a generic call suffix `f<T>(x)`.
     [$.call_expression, $.infix_expression, $.unsafe_expression],
     [$.call_expression, $.infix_expression, $.move_expression],
@@ -693,7 +692,7 @@ module.exports = grammar({
       $.contextual_record_literal_expression,
       $.contextual_tuple_literal_expression,
       $.applied_member_expression,
-      $.anonymous_callable_expression,
+      $.lambda_expression,
       $.effect_expression,
       $.conditional_expression,
       $.pattern_conditional_expression,
@@ -777,14 +776,30 @@ module.exports = grammar({
       field('member', $.identifier),
     ),
 
-    anonymous_callable_expression: $ => seq(
+    // `|x| x + 1`, `|x: T| { ... }` or `effect |x: T| -> R ! E ? Q { ... }`. A written result needs a
+    // block; an expression body is the lambda's returned value and extends as far as it can.
+    lambda_expression: $ => prec.right(PREC.run, seq(
       optional('effect'),
-      'fn',
-      field('parameters', $.parameter_list),
-      field('return_type', $.return_type),
-      optional(field('failures', $.failure_row)),
-      optional(field('requirements', $.requirement_row)),
-      field('body', $.block),
+      field('parameters', $.lambda_parameter_list),
+      choice(
+        seq(
+          field('return_type', $.return_type),
+          optional(field('failures', $.failure_row)),
+          optional(field('requirements', $.requirement_row)),
+          field('body', $.block),
+        ),
+        field('body', $.block),
+        field('body', $._expression),
+      ),
+    )),
+
+    lambda_parameter_list: $ => choice('||', seq('|', commaSep($.lambda_parameter), '|')),
+
+    // A parameter's type is optional and has no top-level union, since `|` closes the list.
+    lambda_parameter: $ => seq(
+      optional('mut'),
+      field('name', $.identifier),
+      optional(seq(':', field('type', $._type_primary))),
     ),
 
     effect_expression: $ => seq('effect', $.block),

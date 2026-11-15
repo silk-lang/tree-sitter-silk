@@ -3,7 +3,7 @@
 [
   (source_file)
   (function_declaration)
-  (anonymous_callable_expression)
+  (lambda_expression)
   (block)
   (match_arm)
   (impl_declaration)

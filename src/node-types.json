@@ -78,10 +78,6 @@
     "named": true,
     "subtypes": [
       {
-        "type": "anonymous_callable_expression",
-        "named": true
-      },
-      {
         "type": "applied_member_expression",
         "named": true
       },
@@ -167,6 +163,10 @@
       },
       {
         "type": "integer_literal",
+        "named": true
+      },
+      {
+        "type": "lambda_expression",
         "named": true
       },
       {
@@ -434,62 +434,6 @@
           "named": true
         }
       ]
-    }
-  },
-  {
-    "type": "anonymous_callable_expression",
-    "named": true,
-    "fields": {
-      "body": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "block",
-            "named": true
-          }
-        ]
-      },
-      "failures": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "failure_row",
-            "named": true
-          }
-        ]
-      },
-      "parameters": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "parameter_list",
-            "named": true
-          }
-        ]
-      },
-      "requirements": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "requirement_row",
-            "named": true
-          }
-        ]
-      },
-      "return_type": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "return_type",
-            "named": true
-          }
-        ]
-      }
     }
   },
   {
@@ -2309,6 +2253,155 @@
       "types": [
         {
           "type": "visibility",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "lambda_expression",
+    "named": true,
+    "fields": {
+      "body": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "_expression",
+            "named": true
+          },
+          {
+            "type": "block",
+            "named": true
+          }
+        ]
+      },
+      "failures": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "failure_row",
+            "named": true
+          }
+        ]
+      },
+      "parameters": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "lambda_parameter_list",
+            "named": true
+          }
+        ]
+      },
+      "requirements": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "requirement_row",
+            "named": true
+          }
+        ]
+      },
+      "return_type": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "return_type",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "lambda_parameter",
+    "named": true,
+    "fields": {
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "type": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "applied_type",
+            "named": true
+          },
+          {
+            "type": "callable_type",
+            "named": true
+          },
+          {
+            "type": "exact_representation_type",
+            "named": true
+          },
+          {
+            "type": "fixed_array_type",
+            "named": true
+          },
+          {
+            "type": "foreign_function_type",
+            "named": true
+          },
+          {
+            "type": "mode_qualified_type",
+            "named": true
+          },
+          {
+            "type": "parenthesized_type",
+            "named": true
+          },
+          {
+            "type": "pointer_type",
+            "named": true
+          },
+          {
+            "type": "reference_type",
+            "named": true
+          },
+          {
+            "type": "row_without",
+            "named": true
+          },
+          {
+            "type": "slice_type",
+            "named": true
+          },
+          {
+            "type": "type_path",
+            "named": true
+          },
+          {
+            "type": "unit_type",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "lambda_parameter_list",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "lambda_parameter",
           "named": true
         }
       ]

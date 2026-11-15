@@ -1,7 +1,7 @@
 (function_declaration
   body: (block "{" (_)* @function.inside "}")) @function.around
 
-(anonymous_callable_expression
+(lambda_expression
   body: (block "{" (_)* @function.inside "}")) @function.around
 
 (struct_declaration
