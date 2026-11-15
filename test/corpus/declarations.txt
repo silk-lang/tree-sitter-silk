@@ -364,3 +364,43 @@ static if target.os == "linux" {
       (identifier)
       (declaration_group)
       (declaration_group))))
+
+================================================================================
+Array column hint
+================================================================================
+
+const BITS: [u8; 256 / 4; 4] = [0, 1]
+
+fn f() {
+  let rows: [u8; 2; 1] = [0, 1]
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (constant_declaration
+    (identifier)
+    (fixed_array_type
+      (type_path
+        (type_identifier))
+      (infix_expression
+        (integer_literal)
+        (integer_literal))
+      (integer_literal))
+    (array_literal_expression
+      (integer_literal)
+      (integer_literal)))
+  (function_declaration
+    (identifier)
+    (parameter_list)
+    (block
+      (binding_statement
+        (identifier)
+        (fixed_array_type
+          (type_path
+            (type_identifier))
+          (integer_literal)
+          (integer_literal))
+        (array_literal_expression
+          (integer_literal)
+          (integer_literal))))))

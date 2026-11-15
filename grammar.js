@@ -159,7 +159,7 @@ module.exports = grammar({
       'const',
       field('name', $.identifier),
       ':',
-      field('type', $._type),
+      field('type', $._annotation_type),
       '=',
       field('value', $._expression),
     ),
@@ -517,6 +517,20 @@ module.exports = grammar({
 
     fixed_array_type: $ => seq('[', field('element', $._type), ';', field('length', $._expression), ']'),
 
+    // A `let` or `const` type may end its outermost fixed array with a formatter column hint, as in
+    // `[u8; 256; 4]`; the hint has no meaning to the type.
+    _annotation_type: $ => choice($._type, alias($._column_hinted_array_type, $.fixed_array_type)),
+
+    _column_hinted_array_type: $ => seq(
+      '[',
+      field('element', $._type),
+      ';',
+      field('length', $._expression),
+      ';',
+      field('columns', alias(/[0-9](_?[0-9])*/, $.integer_literal)),
+      ']',
+    ),
+
     // `effect fn(A) -> B ! F ? S` is a callable whose call returns an Effect.
     callable_type: $ => prec.right(seq(
       optional(seq('for', field('binders', $.type_parameter_list))),
@@ -583,7 +597,7 @@ module.exports = grammar({
       'let',
       optional(choice('mut', 'static')),
       field('name', $.identifier),
-      optional(seq(':', field('type', $._type))),
+      optional(seq(':', field('type', $._annotation_type))),
       '=',
       field('value', $._expression),
     ),
