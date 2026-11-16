@@ -238,12 +238,12 @@ line"""
         (string_literal)))))
 
 ================================================================================
-Anonymous callables, effects and match
+Lambdas, effects and match
 ================================================================================
 
 fn f() -> () {
-  let a = fn(x: i32) -> i32 { return x }
-  let b = effect fn() -> () ! Failure { return }
+  let a = |x: i32| -> i32 { return x }
+  let b = effect || -> () ! Failure { return }
   let c = effect {
     return
   }
@@ -268,9 +268,9 @@ fn f() -> () {
     (block
       (binding_statement
         (identifier)
-        (anonymous_callable_expression
-          (parameter_list
-            (parameter
+        (lambda_expression
+          (lambda_parameter_list
+            (lambda_parameter
               (identifier)
               (type_path
                 (type_identifier))))
@@ -282,8 +282,8 @@ fn f() -> () {
               (identifier)))))
       (binding_statement
         (identifier)
-        (anonymous_callable_expression
-          (parameter_list)
+        (lambda_expression
+          (lambda_parameter_list)
           (return_type
             (unit_type))
           (failure_row
@@ -564,3 +564,141 @@ fn f(c: char) -> i32 {
             (match_arm
               (universal_pattern)
               (integer_literal))))))))
+
+================================================================================
+Lambda forms
+================================================================================
+
+fn f() -> () {
+  let a = xs.map(|x| x + 1)
+  let b = apply(|x: i32, mut y| -> i32 { return x * y }, 2)
+  let c = go(|| { log() })
+  let d = (|x| x) |> use
+  let e = |f: (fn(i32) -> i32), v: i32| f(v)
+  let g = effect |x| run step(x)
+  let h = effect |x: i32| -> i32
+    ! Problem
+    ? &Source {
+    return x
+  }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (identifier)
+    (parameter_list)
+    (return_type
+      (unit_type))
+    (block
+      (binding_statement
+        (identifier)
+        (call_expression
+          (field_projection_expression
+            (identifier)
+            (field_identifier))
+          (argument_list
+            (lambda_expression
+              (lambda_parameter_list
+                (lambda_parameter
+                  (identifier)))
+              (infix_expression
+                (identifier)
+                (integer_literal))))))
+      (binding_statement
+        (identifier)
+        (call_expression
+          (identifier)
+          (argument_list
+            (lambda_expression
+              (lambda_parameter_list
+                (lambda_parameter
+                  (identifier)
+                  (type_path
+                    (type_identifier)))
+                (lambda_parameter
+                  (identifier)))
+              (return_type
+                (type_path
+                  (type_identifier)))
+              (block
+                (return_statement
+                  (infix_expression
+                    (identifier)
+                    (identifier)))))
+            (integer_literal))))
+      (binding_statement
+        (identifier)
+        (call_expression
+          (identifier)
+          (argument_list
+            (lambda_expression
+              (lambda_parameter_list)
+              (block
+                (expression_statement
+                  (call_expression
+                    (identifier)
+                    (argument_list))))))))
+      (binding_statement
+        (identifier)
+        (pipeline_expression
+          (grouped_expression
+            (lambda_expression
+              (lambda_parameter_list
+                (lambda_parameter
+                  (identifier)))
+              (identifier)))
+          (identifier)))
+      (binding_statement
+        (identifier)
+        (lambda_expression
+          (lambda_parameter_list
+            (lambda_parameter
+              (identifier)
+              (parenthesized_type
+                (callable_type
+                  (type_path
+                    (type_identifier))
+                  (type_path
+                    (type_identifier)))))
+            (lambda_parameter
+              (identifier)
+              (type_path
+                (type_identifier))))
+          (call_expression
+            (identifier)
+            (argument_list
+              (identifier)))))
+      (binding_statement
+        (identifier)
+        (lambda_expression
+          (lambda_parameter_list
+            (lambda_parameter
+              (identifier)))
+          (run_expression
+            (call_expression
+              (identifier)
+              (argument_list
+                (identifier))))))
+      (binding_statement
+        (identifier)
+        (lambda_expression
+          (lambda_parameter_list
+            (lambda_parameter
+              (identifier)
+              (type_path
+                (type_identifier))))
+          (return_type
+            (type_path
+              (type_identifier)))
+          (failure_row
+            (type_path
+              (type_identifier)))
+          (requirement_row
+            (reference_type
+              (type_path
+                (type_identifier))))
+          (block
+            (return_statement
+              (identifier))))))))
