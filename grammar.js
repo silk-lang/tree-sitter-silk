@@ -70,7 +70,7 @@ module.exports = grammar({
   word: $ => $.identifier,
 
   // An index projection's `[` must share a line with its operand (see src/scanner.c).
-  externals: $ => [$._index_bracket],
+  externals: $ => [$._index_bracket, $._erased_any],
 
   extras: $ => [/\s/, $.line_comment, $.doc_comment, $.module_doc_comment],
 
@@ -466,6 +466,7 @@ module.exports = grammar({
       $.type_path,
       $.applied_type,
       $.mode_qualified_type,
+      $.erased_type,
       $.unit_type,
       $.parenthesized_type,
       $.reference_type,
@@ -484,6 +485,12 @@ module.exports = grammar({
     ),
 
     applied_type: $ => seq(field('type', $.type_path), field('arguments', $.type_arguments)),
+
+    erased_type: $ => prec.right(seq(
+      alias($._erased_any, 'any'),
+      field('contract', choice($.type_path, $.applied_type)),
+      repeat(seq('+', field('contract', choice($.type_path, $.applied_type)))),
+    )),
 
     mode_qualified_type: $ => prec(-1, seq(
       field('mode', choice('mut', 'once')),
@@ -682,6 +689,7 @@ module.exports = grammar({
       $.byte_string_literal,
       $.character_literal,
       $.boolean_literal,
+      prec(-1, alias($.applied_type, $.specialized_item_expression)),
       $.unit_expression,
       $.grouped_expression,
       $.tuple_literal_expression,

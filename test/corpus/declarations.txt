@@ -404,3 +404,63 @@ fn f() {
         (array_literal_expression
           (integer_literal)
           (integer_literal))))))
+
+================================================================================
+Borrowed interface contracts
+================================================================================
+
+type Shared<'a> = &'a any codec.Decoder<i32, Error> + Concurrent
+type Exclusive = &mut any Sink
+fn identity(any: i32) -> i32 { return any }
+type any = i32
+type Alias = any
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (type_alias_declaration
+    name: (type_identifier)
+    type_parameters: (type_parameter_list
+      (lifetime_parameter
+        name: (lifetime)))
+    type: (reference_type
+      (lifetime)
+      type: (erased_type
+        contract: (applied_type
+          type: (type_path
+            namespace: (namespace_identifier)
+            name: (type_identifier))
+          arguments: (type_arguments
+            (type_path
+              (type_identifier))
+            (type_path
+              (type_identifier))))
+        contract: (type_path
+          (type_identifier)))))
+  (type_alias_declaration
+    name: (type_identifier)
+    type: (reference_type
+      type: (erased_type
+        contract: (type_path
+          (type_identifier)))))
+  (function_declaration
+    name: (identifier)
+    parameters: (parameter_list
+      (parameter
+        name: (identifier)
+        type: (type_path
+          (type_identifier))))
+    return_type: (return_type
+      (type_path
+        (type_identifier)))
+    body: (block
+      (return_statement
+        (identifier))))
+  (type_alias_declaration
+    name: (type_identifier)
+    type: (type_path
+      (type_identifier)))
+  (type_alias_declaration
+    name: (type_identifier)
+    type: (type_path
+      (type_identifier))))

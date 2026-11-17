@@ -3492,6 +3492,10 @@
         },
         {
           "type": "SYMBOL",
+          "name": "erased_type"
+        },
+        {
+          "type": "SYMBOL",
           "name": "unit_type"
         },
         {
@@ -3601,6 +3605,70 @@
           }
         }
       ]
+    },
+    "erased_type": {
+      "type": "PREC_RIGHT",
+      "value": 0,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "ALIAS",
+            "content": {
+              "type": "SYMBOL",
+              "name": "_erased_any"
+            },
+            "named": false,
+            "value": "any"
+          },
+          {
+            "type": "FIELD",
+            "name": "contract",
+            "content": {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "type_path"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "applied_type"
+                }
+              ]
+            }
+          },
+          {
+            "type": "REPEAT",
+            "content": {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "STRING",
+                  "value": "+"
+                },
+                {
+                  "type": "FIELD",
+                  "name": "contract",
+                  "content": {
+                    "type": "CHOICE",
+                    "members": [
+                      {
+                        "type": "SYMBOL",
+                        "name": "type_path"
+                      },
+                      {
+                        "type": "SYMBOL",
+                        "name": "applied_type"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
     },
     "mode_qualified_type": {
       "type": "PREC",
@@ -5192,6 +5260,19 @@
         {
           "type": "SYMBOL",
           "name": "boolean_literal"
+        },
+        {
+          "type": "PREC",
+          "value": -1,
+          "content": {
+            "type": "ALIAS",
+            "content": {
+              "type": "SYMBOL",
+              "name": "applied_type"
+            },
+            "named": true,
+            "value": "specialized_item_expression"
+          }
         },
         {
           "type": "SYMBOL",
@@ -8276,6 +8357,10 @@
     {
       "type": "SYMBOL",
       "name": "_index_bracket"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "_erased_any"
     }
   ],
   "inline": [

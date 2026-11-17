@@ -702,3 +702,46 @@ fn f() -> () {
           (block
             (return_statement
               (identifier))))))))
+
+================================================================================
+Specialized items as arguments
+================================================================================
+
+fn callbacks<A, E>() -> () {
+  drive(completed<A, E>, suspended<A, E>)
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    name: (identifier)
+    type_parameters: (type_parameter_list
+      (type_parameter
+        name: (type_identifier))
+      (type_parameter
+        name: (type_identifier)))
+    parameters: (parameter_list)
+    return_type: (return_type
+      (unit_type))
+    body: (block
+      (expression_statement
+        (call_expression
+          function: (identifier)
+          arguments: (argument_list
+            (specialized_item_expression
+              type: (type_path
+                (type_identifier))
+              arguments: (type_arguments
+                (type_path
+                  (type_identifier))
+                (type_path
+                  (type_identifier))))
+            (specialized_item_expression
+              type: (type_path
+                (type_identifier))
+              arguments: (type_arguments
+                (type_path
+                  (type_identifier))
+                (type_path
+                  (type_identifier))))))))))

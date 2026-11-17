@@ -173,6 +173,8 @@
   "const"
 ] @keyword.modifier
 
+(erased_type "any" @keyword)
+
 (visibility) @keyword.modifier
 
 (callable_mode) @keyword.modifier

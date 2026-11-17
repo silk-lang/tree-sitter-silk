@@ -175,6 +175,8 @@
   "const"
 ] @keyword
 
+(erased_type "any" @keyword)
+
 (visibility) @keyword
 
 (callable_mode) @keyword
