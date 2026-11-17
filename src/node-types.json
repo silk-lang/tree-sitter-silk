@@ -206,6 +206,10 @@
         "named": true
       },
       {
+        "type": "specialized_item_expression",
+        "named": true
+      },
+      {
         "type": "string_literal",
         "named": true
       },
@@ -345,6 +349,10 @@
       },
       {
         "type": "callable_type",
+        "named": true
+      },
+      {
+        "type": "erased_type",
         "named": true
       },
       {
@@ -620,6 +628,10 @@
           },
           {
             "type": "callable_type",
+            "named": true
+          },
+          {
+            "type": "erased_type",
             "named": true
           },
           {
@@ -1402,6 +1414,26 @@
         "types": [
           {
             "type": "type_identifier",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "erased_type",
+    "named": true,
+    "fields": {
+      "contract": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "applied_type",
+            "named": true
+          },
+          {
+            "type": "type_path",
             "named": true
           }
         ]
@@ -2345,6 +2377,10 @@
             "named": true
           },
           {
+            "type": "erased_type",
+            "named": true
+          },
+          {
             "type": "exact_representation_type",
             "named": true
           },
@@ -2639,6 +2675,10 @@
           },
           {
             "type": "callable_type",
+            "named": true
+          },
+          {
+            "type": "erased_type",
             "named": true
           },
           {
@@ -3114,6 +3154,10 @@
             "named": true
           },
           {
+            "type": "erased_type",
+            "named": true
+          },
+          {
             "type": "exact_representation_type",
             "named": true
           },
@@ -3281,6 +3325,10 @@
             "named": true
           },
           {
+            "type": "erased_type",
+            "named": true
+          },
+          {
             "type": "exact_representation_type",
             "named": true
           },
@@ -3371,6 +3419,10 @@
           "named": true
         },
         {
+          "type": "erased_type",
+          "named": true
+        },
+        {
           "type": "exact_representation_type",
           "named": true
         },
@@ -3431,6 +3483,10 @@
         },
         {
           "type": "callable_type",
+          "named": true
+        },
+        {
+          "type": "erased_type",
           "named": true
         },
         {
@@ -3607,6 +3663,10 @@
           "named": true
         },
         {
+          "type": "erased_type",
+          "named": true
+        },
+        {
           "type": "exact_representation_type",
           "named": true
         },
@@ -3758,6 +3818,32 @@
           "named": true
         }
       ]
+    }
+  },
+  {
+    "type": "specialized_item_expression",
+    "named": true,
+    "fields": {
+      "arguments": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "type_arguments",
+            "named": true
+          }
+        ]
+      },
+      "type": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "type_path",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -4391,6 +4477,10 @@
           "named": true
         },
         {
+          "type": "erased_type",
+          "named": true
+        },
+        {
           "type": "exact_representation_type",
           "named": true
         },
@@ -4761,6 +4851,10 @@
   },
   {
     "type": "align",
+    "named": false
+  },
+  {
+    "type": "any",
     "named": false
   },
   {
