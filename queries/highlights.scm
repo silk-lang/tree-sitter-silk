@@ -113,6 +113,8 @@
 
 ; Keywords
 
+(service_declaration ["ambient" "default"] @keyword.modifier)
+
 [
   "struct"
   "tuple"

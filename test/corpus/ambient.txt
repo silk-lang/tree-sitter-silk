@@ -1,0 +1,30 @@
+==================
+Ambient service with qualified default and contextual names
+==================
+
+pub ambient service Sink default sinks.Quiet {}
+fn ambient(default: i32) -> i32 { return default }
+
+---
+
+(source_file
+  (service_declaration
+    (visibility)
+    (type_identifier)
+    (type_path
+      (namespace_identifier)
+      (type_identifier))
+    (declaration_list))
+  (function_declaration
+    (identifier)
+    (parameter_list
+      (parameter
+        (identifier)
+        (type_path
+          (type_identifier))))
+    (return_type
+      (type_path
+        (type_identifier)))
+    (block
+      (return_statement
+        (identifier)))))

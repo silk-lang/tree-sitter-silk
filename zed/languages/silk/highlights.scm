@@ -115,6 +115,8 @@
 
 ; Keywords
 
+(service_declaration ["ambient" "default"] @keyword)
+
 [
   "struct"
   "tuple"

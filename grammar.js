@@ -253,13 +253,18 @@ module.exports = grammar({
       field('type', $._type),
     ),
 
-    service_declaration: $ => seq(
-      optional($.visibility),
-      'service',
-      field('name', alias($.identifier, $.type_identifier)),
-      optional(field('type_parameters', $.type_parameter_list)),
-      field('body', $.declaration_list),
-    ),
+    service_declaration: $ => {
+      const header = seq(
+        'service',
+        field('name', alias($.identifier, $.type_identifier)),
+        optional(field('type_parameters', $.type_parameter_list)),
+      );
+      return seq(
+        optional($.visibility),
+        choice(header, seq('ambient', header, 'default', field('default', $.type_path))),
+        field('body', $.declaration_list),
+      );
+    },
 
     interface_declaration: $ => seq(
       optional($.visibility),
