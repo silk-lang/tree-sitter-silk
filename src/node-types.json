@@ -3746,6 +3746,16 @@
           }
         ]
       },
+      "default": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "type_path",
+            "named": true
+          }
+        ]
+      },
       "name": {
         "multiple": false,
         "required": true,
@@ -4854,6 +4864,10 @@
     "named": false
   },
   {
+    "type": "ambient",
+    "named": false
+  },
+  {
     "type": "any",
     "named": false
   },
@@ -4887,6 +4901,10 @@
   },
   {
     "type": "continue",
+    "named": false
+  },
+  {
+    "type": "default",
     "named": false
   },
   {
